@@ -1,20 +1,31 @@
 package controller;
 
+import java.io.IOException;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import Util.HibernateUtil;
 import Util.PasswordUtils;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.stage.Stage;
 import model.User;
 
 public class LogInController {
 	@FXML private TextField usernameField;
 	@FXML private PasswordField passwordField;
-	@FXML
+	@FXML private Button loginButton;
+	@FXML private TextField visiblePasswordField;
+	@FXML private ImageView eyeIcon;
+	private boolean isPasswordVisible = false;
 	public void handleLogin() {
 		String username = usernameField.getText();
 		String password = passwordField.getText();
@@ -24,18 +35,26 @@ public class LogInController {
 		}
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
 			Query<User> query = session.createQuery(
-				    "FROM User WHERE username = :username AND password = :password", User.class
+				    "FROM User WHERE username = :username", User.class
 				);
 			query.setParameter("username", username);
-			query.setParameter("password", password);
 			User user = query.uniqueResult();
 			if (user == null) {
 				showAlert("Account not found");
 				return;
 			}
 			if (PasswordUtils.verifyPassword(password, user.getPassword())) {
-				showAlert("Account not found");
-				return;
+				showAlert("Login successful");
+				try {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+					Parent root = loader.load();
+					Stage stage = (Stage) loginButton.getScene().getWindow();
+					stage.setScene(new Scene(root));
+					stage.show();
+				} catch (IOException e) {
+					e.printStackTrace();
+					System.out.println("Cannot switch to Home");
+				}
 			} else {
 				showAlert("Incorrect password");
 			}
@@ -43,6 +62,18 @@ public class LogInController {
 			e.printStackTrace();
 			showAlert("Error: " + e.getMessage());
 		}
+	}
+	public void initialize() {
+		visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
+		visiblePasswordField.setVisible(false);
+	    visiblePasswordField.setManaged(false);
+	}
+	public void togglePasswordVisibility() {
+		isPasswordVisible = !isPasswordVisible;
+	    passwordField.setVisible(!isPasswordVisible);
+	    passwordField.setManaged(!isPasswordVisible);
+	    visiblePasswordField.setVisible(isPasswordVisible);
+	    visiblePasswordField.setManaged(isPasswordVisible);
 	}
 	private void showAlert(String message) {
 		// TODO Auto-generated method stub
