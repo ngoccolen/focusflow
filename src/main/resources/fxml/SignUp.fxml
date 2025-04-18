@@ -36,7 +36,7 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Label>
-      <TextField fx:id="nameField" layoutX="433.0" layoutY="134.0" prefHeight="31.0" prefWidth="296.0" />
+      <TextField fx:id="usernameField" layoutX="433.0" layoutY="134.0" prefHeight="31.0" prefWidth="296.0" />
       <PasswordField fx:id="passwordField" layoutX="433.0" layoutY="277.0" prefHeight="31.0" prefWidth="296.0" />
       <TextField fx:id="emailField" layoutX="433.0" layoutY="206.0" prefHeight="30.0" prefWidth="296.0" />
       <Label layoutX="434.0" layoutY="316.0" text="Must be at least 8 characters." textFill="#575656" />

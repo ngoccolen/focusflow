@@ -12,19 +12,22 @@ import javafx.scene.control.TextField;
 import model.User;
 
 public class LogInController {
-	@FXML private TextField emailField;
+	@FXML private TextField usernameField;
 	@FXML private PasswordField passwordField;
 	@FXML
 	public void handleLogin() {
-		String email = emailField.getText();
+		String username = usernameField.getText();
 		String password = passwordField.getText();
-		if (email.isEmpty() || password.isEmpty()) {
+		if (username.isEmpty() || password.isEmpty()) {
 			showAlert("Please fill in all fields");
 			return;
 		}
 		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-			Query<User> query = session.createQuery("FROM users WHERE email = :email", User.class);
-			query.setParameter("email", email);
+			Query<User> query = session.createQuery(
+				    "FROM User WHERE username = :username AND password = :password", User.class
+				);
+			query.setParameter("username", username);
+			query.setParameter("password", password);
 			User user = query.uniqueResult();
 			if (user == null) {
 				showAlert("Account not found");
