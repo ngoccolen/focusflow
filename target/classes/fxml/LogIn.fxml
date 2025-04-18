@@ -33,6 +33,8 @@
       </Label>
       <TextField fx:id="usernameField" layoutX="425.0" layoutY="110.0" prefHeight="32.0" prefWidth="266.0" />
       <PasswordField fx:id="passwordField" layoutX="425.0" layoutY="190.0" prefHeight="32.0" prefWidth="266.0" />
+      <TextField fx:id="visiblePasswordField" layoutX="425.0" layoutY="190.0"
+           prefHeight="32.0" prefWidth="266.0" visible="false" managed="false"/>
       <Button fx:id="loginButton" layoutX="391.0" layoutY="282.0" mnemonicParsing="false" prefHeight="32.0" prefWidth="302.0" style="-fx-background-color: #FA8072;" text="Log In" textFill="WHITE"
       onAction="#handleLogin">
          <font>
@@ -58,7 +60,8 @@
          </image>
       </ImageView>
       <TextField layoutX="392.0" layoutY="190.0" prefHeight="32.0" prefWidth="34.0" />
-      <ImageView fitHeight="20.0" fitWidth="23.0" layoutX="400.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="eyeIcon" fitHeight="20.0" fitWidth="23.0" layoutX="400.0" layoutY="195.0" pickOnBounds="true" preserveRatio="true"
+      onMouseClicked="#togglePasswordVisibility">
          <image>
             <Image url="@/images/eyeicondn.png" />
          </image>
