@@ -18,13 +18,13 @@ import javafx.stage.Stage;
 import model.User;
 
 public class SignUpController {
-    @FXML private TextField nameField;
+    @FXML private TextField usernameField;
     @FXML private PasswordField passwordField;
     @FXML private TextField emailField;
 
     @FXML
     public void handleSignUp() {
-        String username = nameField.getText();
+        String username = usernameField.getText();
         String email = emailField.getText();
         String password = passwordField.getText();
 
@@ -50,7 +50,12 @@ public class SignUpController {
             transaction = session.beginTransaction();
             session.save(user);
             transaction.commit();
-            showAlert("Account created successfully.");
+            transaction = null;
+            Parent homeView = FXMLLoader.load(getClass().getResource("/fxml/Dashboard.fxml"));
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(homeView));
+            stage.setTitle("Home");
+            stage.show();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             e.printStackTrace();
@@ -59,15 +64,10 @@ public class SignUpController {
     }
 
     @FXML
-    public void handleGoogleSignUp() {
-        showAlert("Google sign up is not implemented yet.");
-    }
-
-    @FXML
     public void handleLoginRedirect() {
         try {
             Parent loginView = FXMLLoader.load(getClass().getResource("/fxml/Login.fxml"));
-            Stage stage = (Stage) nameField.getScene().getWindow();
+            Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(loginView));
         } catch (IOException e) {
             showAlert("Failed to load login view.");
