@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="158.0" prefWidth="339.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="21.0" layoutY="20.0" prefHeight="70.0" prefWidth="157.0" text="20:00">
+         <font>
+            <Font name="Arial" size="60.0" />
+         </font>
+      </Label>
+      <Button layoutX="188.0" layoutY="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="90.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-radius: 5px; -fx-border-width: 1px;" text="Start" />
+      <ImageView fitHeight="27.0" fitWidth="34.0" layoutX="290.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/reset-icon1-main.png" />
+         </image>
+      </ImageView>
+      <HBox layoutX="4.0" layoutY="103.0" prefHeight="54.0" prefWidth="331.0">
+         <children>
+            <Label prefHeight="44.0" prefWidth="118.0" style="-fx-alignment: center; -fx-border-color: transparent transparent #FFA500 transparent;" text="Pomodoro">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="44.0" prefWidth="118.0" style="-fx-alignment: center;" text="Short Break">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="10.0" prefHeight="44.0" prefWidth="118.0" style="-fx-alignment: center;" text="Long Break">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
