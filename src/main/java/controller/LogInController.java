@@ -27,42 +27,53 @@ public class LogInController {
 	@FXML private ImageView eyeIcon;
 	private boolean isPasswordVisible = false;
 	public void handleLogin() {
-		String username = usernameField.getText();
-		String password = passwordField.getText();
-		if (username.isEmpty() || password.isEmpty()) {
-			showAlert("Please fill in all fields");
-			return;
-		}
-		try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-			Query<User> query = session.createQuery(
-				    "FROM User WHERE username = :username", User.class
-				);
-			query.setParameter("username", username);
-			User user = query.uniqueResult();
-			if (user == null) {
-				showAlert("Account not found");
-				return;
-			}
-			if (PasswordUtils.verifyPassword(password, user.getPassword())) {
-				showAlert("Login successful");
-				try {
-					FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
-					Parent root = loader.load();
-					Stage stage = (Stage) loginButton.getScene().getWindow();
-					stage.setScene(new Scene(root));
-					stage.show();
-				} catch (IOException e) {
-					e.printStackTrace();
-					System.out.println("Cannot switch to Home");
-				}
-			} else {
-				showAlert("Incorrect password");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			showAlert("Error: " + e.getMessage());
-		}
+	    String username = usernameField.getText();
+	    String password = passwordField.getText();
+
+	    if (username.isEmpty() || password.isEmpty()) {
+	        showAlert("Please fill in all fields");
+	        return;
+	    }
+
+	    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	        // Truy vấn và giới hạn chỉ lấy 1 user
+	        Query<User> query = session.createQuery(
+	            "FROM User WHERE username = :username", User.class
+	        );
+	        query.setParameter("username", username);
+	        query.setMaxResults(1); // Giới hạn kết quả
+
+	        // Lấy danh sách kết quả
+	        java.util.List<User> users = query.getResultList();
+
+	        if (users.isEmpty()) {
+	            showAlert("Account not found");
+	            return;
+	        }
+
+	        User user = users.get(0); // Lấy user đầu tiên
+
+	        if (PasswordUtils.verifyPassword(password, user.getPassword())) {
+	            showAlert("Login successful");
+	            try {
+	                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+	                Parent root = loader.load();
+	                Stage stage = (Stage) loginButton.getScene().getWindow();
+	                stage.setScene(new Scene(root));
+	                stage.show();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	                System.out.println("Cannot switch to Home");
+	            }
+	        } else {
+	            showAlert("Incorrect password");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        showAlert("Error: " + e.getMessage());
+	    }
 	}
+
 	public void initialize() {
 		visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
 		visiblePasswordField.setVisible(false);
