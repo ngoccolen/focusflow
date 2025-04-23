@@ -25,25 +25,25 @@
          <children>
             <ImageView fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/images/avatariconmain.png" />
+                  <Image url="@../images/avatariconmain.png" />
                </image>
             </ImageView>
             <ImageView fx:id="home" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true"
             onMouseClicked="#handleHomeClick">
                <image>
-                  <Image url="@/images/home-icon-main.png" />
+                  <Image url="@../images/home-icon-main.png" />
                </image>
             </ImageView>
             <ImageView fx:id="dashboard" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true"
             onMouseClicked="#handleDashboardClick">
                <image>
-                  <Image url="@/images/study-icon-main.png" />
+                  <Image url="@../images/study-icon-main.png" />
                </image>
             </ImageView>
             <ImageView fx:id="logout" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" pickOnBounds="true" preserveRatio="true"
             onMouseClicked="#handleLogoutClick">
                <image>
-                  <Image url="@/images/logout-icon-main.png" />
+                  <Image url="@../images/logout-icon-main.png" />
                </image>
             </ImageView>
          </children>
@@ -57,7 +57,7 @@
          <children>
             <ImageView fitHeight="206.0" fitWidth="197.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/images/human-icon-main.jpg" />
+                  <Image url="@../images/human-icon-main.jpg" />
                </image>
             </ImageView>
             <Label layoutX="270.0" layoutY="7.0" prefHeight="141.0" prefWidth="390.0" text="Genius is one percent inspiration and ninety-nine percent perspiration" wrapText="true">
@@ -76,7 +76,7 @@
          <children>
             <ImageView fitHeight="334.0" fitWidth="318.0" layoutX="11.0" layoutY="-21.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/images/schedule-icon-main.jpg" />
+                  <Image url="@../images/schedule-icon-main.jpg" />
                </image>
             </ImageView>
             <Label layoutX="35.0" layoutY="45.0" prefHeight="22.0" prefWidth="117.0" text="Schedule">
@@ -223,7 +223,7 @@
             </Button>
             <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="271.0" layoutY="315.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@/images/reset-icon-main.png" />
+                  <Image url="@../images/reset-icon-main.png" />
                </image>
             </ImageView>
             <Label layoutX="22.0" layoutY="352.0" prefHeight="24.0" prefWidth="74.0" text="January">
@@ -299,7 +299,7 @@
       </ImageView>
       <ImageView fitHeight="22.0" fitWidth="28.0" layoutX="754.0" layoutY="442.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@images/minus-icon-main.png" />
+            <Image url="@../images/plus-icon-main.png" />
          </image>
       </ImageView>
    </children>
