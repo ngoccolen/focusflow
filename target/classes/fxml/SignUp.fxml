@@ -16,7 +16,7 @@
             <Image url="@../images/anhSignUp1.jpg" />
          </image>
       </ImageView>
-      <Label layoutX="530.0" layoutY="50.0" text="Sign up">
+      <Label layoutX="543.0" layoutY="50.0" text="Sign up">
          <font>
             <Font name="Arial Black" size="25.0" />
          </font>
@@ -54,7 +54,7 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Button>
-      <ImageView fitHeight="48.0" fitWidth="46.0" layoutX="475.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="48.0" fitWidth="46.0" layoutX="488.0" layoutY="46.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/study-logo.png" />
          </image>
