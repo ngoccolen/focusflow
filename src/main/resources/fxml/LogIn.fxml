@@ -16,7 +16,7 @@
             <Image url="@../images/logodn.jpg" />
          </image>
       </ImageView>
-      <Label layoutX="514.0" layoutY="27.0" prefHeight="42.0" prefWidth="94.0" text="Login">
+      <Label layoutX="531.0" layoutY="27.0" prefHeight="42.0" prefWidth="94.0" text="Login">
          <font>
             <Font name="Arial Black" size="24.0" />
          </font>
@@ -63,7 +63,7 @@
             <Image url="@../images/eyeicondn.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="48.0" fitWidth="46.0" layoutX="456.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="48.0" fitWidth="46.0" layoutX="476.0" layoutY="25.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/study-logo.png" />
          </image>
