@@ -28,17 +28,20 @@
                   <Image url="@../images/avatariconmain.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="home" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleHomeClick">
                <image>
                   <Image url="@../images/home-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="dashboard" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleDashboardClick">
                <image>
                   <Image url="@../images/study-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="logout" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleLogoutClick">
                <image>
                   <Image url="@../images/logout-icon-main.png" />
                </image>
