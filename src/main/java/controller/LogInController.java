@@ -58,6 +58,8 @@ public class LogInController {
 	            try {
 	                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
 	                Parent root = loader.load();
+	                DashboardController controller = loader.getController();
+	                controller.setLoggedInUser(user);
 	                Stage stage = (Stage) loginButton.getScene().getWindow();
 	                stage.setScene(new Scene(root));
 	                stage.show();
