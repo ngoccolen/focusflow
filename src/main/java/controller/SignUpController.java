@@ -51,7 +51,10 @@ public class SignUpController {
             session.save(user);
             transaction.commit();
             transaction = null;
-            Parent homeView = FXMLLoader.load(getClass().getResource("/fxml/Dashboard.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+            Parent homeView = loader.load();
+            DashboardController dashboardController = loader.getController();
+            dashboardController.setLoggedInUser(user);
             Stage stage = (Stage) usernameField.getScene().getWindow();
             stage.setScene(new Scene(homeView));
             stage.setTitle("Home");
