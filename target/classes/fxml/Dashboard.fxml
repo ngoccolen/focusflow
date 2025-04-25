@@ -19,12 +19,12 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1125.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
-fx:controller="controller.DashboardController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1125.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
       <AnchorPane prefHeight="758.0" prefWidth="86.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
-            <ImageView fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="avatarIcon" fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleAvatarClick">
                <image>
                   <Image url="@../images/avatariconmain.png" />
                </image>
@@ -34,14 +34,12 @@ fx:controller="controller.DashboardController">
                   <Image url="@../images/home-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="GiaoDienChinhIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true"
-            onMouseClicked="#handleGDChinhClick">
+            <ImageView fx:id="GiaoDienChinhIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" onMouseClicked="#handleGDChinhClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/study-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="LogoutIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" pickOnBounds="true" preserveRatio="true"
-            onMouseClicked="#handleLogoutClick">
+            <ImageView fx:id="LogoutIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" onMouseClicked="#handleLogoutClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/logout-icon-main.png" />
                </image>
@@ -55,7 +53,8 @@ fx:controller="controller.DashboardController">
       </Label>
       <AnchorPane layoutX="106.0" layoutY="59.0" prefHeight="178.0" prefWidth="683.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
-            <ImageView fitHeight="206.0" fitWidth="197.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="avatarIcon" fitHeight="206.0" fitWidth="197.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleAvatarClick">
                <image>
                   <Image url="@../images/human-icon-main.jpg" />
                </image>
@@ -280,7 +279,7 @@ fx:controller="controller.DashboardController">
          </children></AnchorPane>
       <AnchorPane layoutX="446.0" layoutY="288.0" prefHeight="142.0" prefWidth="347.0" style="-fx-background-color: #ffffff;">
          <children>
-            <TextArea prefHeight="148.0" prefWidth="347.0" style="-fx-background-color: #ffffff;" text="HI Hello nay chăm chỉ quá nha Quỳnh tổng, chào Ngọc chủ tịch nhaa Iu cả nhà" wrapText="true" />
+            <TextArea prefHeight="148.0" prefWidth="347.0" style="-fx-background-color: #ffffff;" text="Hi Hello nay chăm chỉ quá nha Quỳnh tổng, chào Ngọc chủ tịch nhaa Iu cả nhà" wrapText="true" />
          </children></AnchorPane>
       <Label layoutX="446.0" layoutY="263.0" prefHeight="22.0" prefWidth="118.0" text="Notes">
          <font>
@@ -294,12 +293,12 @@ fx:controller="controller.DashboardController">
       </Label>
       <ImageView fitHeight="22.0" fitWidth="28.0" layoutX="724.0" layoutY="442.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@/images/plus-icon-main.png" />
+            <Image url="@../images/plus-icon-main.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="22.0" fitWidth="28.0" layoutX="754.0" layoutY="442.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/plus-icon-main.png" />
+            <Image url="@../images/minus-icon-main.png" />
          </image>
       </ImageView>
    </children>

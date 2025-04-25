@@ -45,7 +45,7 @@
             <Font size="14.0" />
          </font></Label>
       <Label layoutX="617.0" layoutY="414.0" />
-      <Label layoutX="645.0" layoutY="405.0" onMouseClicked="#handleLoginRedirect" text="Login" textFill="#cf621e">
+      <Label fx:id="loginLabel" layoutX="645.0" layoutY="405.0" onMouseClicked="#handleLoginRedirect" text="Login" textFill="#cf621e">
          <font>
             <Font size="14.0" />
          </font></Label>

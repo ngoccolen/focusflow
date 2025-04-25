@@ -30,6 +30,7 @@ public class GDChinhController {
 			e.printStackTrace();
             System.out.println("Cannot switch to Dashboard");
 		}
+		initialize();
 	}
 	public void handleLogoutClick (MouseEvent event) {
 		try {
@@ -41,6 +42,7 @@ public class GDChinhController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		initialize();
 	}
 	public void handleTimeClick (MouseEvent event) {
 		try {
