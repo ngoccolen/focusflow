@@ -8,7 +8,8 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1540.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="768.0" prefWidth="1540.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="controller.GDChinhController">
    <children>
       <AnchorPane prefHeight="768.0" prefWidth="86.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
@@ -17,7 +18,8 @@
                   <Image url="@../images/avatariconmain.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="DashboardIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleDashboardClick">
                <image>
                   <Image url="@../images/home-icon-main.png" />
                </image>
@@ -27,7 +29,8 @@
                   <Image url="@../images/study-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="LogoutIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleLogoutClick">
                <image>
                   <Image url="@../images/logout-icon-main.png" />
                </image>
@@ -90,7 +93,8 @@
                   <RowConstraints maxHeight="26.4" minHeight="10.0" prefHeight="21.599996948242186" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <ImageView fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="timeIcon" fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true"
+                  onMouseClicked="#handleTimeClick">
                      <image>
                         <Image url="@../images/timer-icon-main.png" />
                      </image>
