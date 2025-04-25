@@ -9,10 +9,12 @@ import Util.HibernateUtil;
 import Util.PasswordUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -26,6 +28,13 @@ public class LogInController {
 	@FXML private TextField visiblePasswordField;
 	@FXML private ImageView eyeIcon;
 	private boolean isPasswordVisible = false;
+	@FXML private Label signUpLabel;
+	
+	public void hand() {
+		eyeIcon.setCursor(Cursor.HAND);
+		signUpLabel.setCursor(Cursor.HAND);
+		loginButton.setCursor(Cursor.HAND);
+	}
 	public void handleLogin() {
 	    String username = usernameField.getText();
 	    String password = passwordField.getText();
@@ -79,6 +88,7 @@ public class LogInController {
 		visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
 		visiblePasswordField.setVisible(false);
 	    visiblePasswordField.setManaged(false);
+	    hand();
 	}
 	public void togglePasswordVisibility() {
 		isPasswordVisible = !isPasswordVisible;
@@ -86,6 +96,15 @@ public class LogInController {
 	    passwordField.setManaged(!isPasswordVisible);
 	    visiblePasswordField.setVisible(isPasswordVisible);
 	    visiblePasswordField.setManaged(isPasswordVisible);
+	}
+	public void handleSignUpClick() {
+		try {
+			Parent loginView = FXMLLoader.load(getClass().getResource("/fxml/SignUp.fxml"));
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            stage.setScene(new Scene(loginView));
+		} catch (Exception e) {
+            showAlert("Failed to load signup view.");
+		}
 	}
 	private void showAlert(String message) {
 		// TODO Auto-generated method stub
