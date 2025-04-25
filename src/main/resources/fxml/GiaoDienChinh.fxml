@@ -22,7 +22,7 @@
                   <Image url="@../images/home-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="163.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/study-icon-main.png" />
                </image>
