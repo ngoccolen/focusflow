@@ -9,15 +9,18 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="158.0" prefWidth="339.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="158.0" prefWidth="339.0" style="-fx-background-color: #ffffff;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+fx:controller="controller.timerController">
    <children>
-      <Label layoutX="21.0" layoutY="20.0" prefHeight="70.0" prefWidth="157.0" text="20:00">
+      <Label fx:id="timeLabel" layoutX="21.0" layoutY="20.0" prefHeight="70.0" prefWidth="157.0" text="20:00">
          <font>
             <Font name="Arial" size="60.0" />
          </font>
       </Label>
-      <Button layoutX="188.0" layoutY="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="90.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-radius: 5px; -fx-border-width: 1px;" text="Start" />
-      <ImageView fitHeight="27.0" fitWidth="34.0" layoutX="290.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
+      <Button fx:id="startButton" layoutX="188.0" layoutY="37.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="90.0" style="-fx-background-color: #ffffff; -fx-border-color: #000000; -fx-border-radius: 5px; -fx-border-width: 1px;" text="Start" /
+      onMouseClicked="#handleStartClick">
+      <ImageView fx:id="resetIcon" fitHeight="27.0" fitWidth="34.0" layoutX="290.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true"
+      onMouseClicked=#handleResetClick>
          <image>
             <Image url="@../images/reset-icon1-main.png" />
          </image>
