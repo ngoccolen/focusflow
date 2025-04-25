@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="279.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="34.0" layoutY="5.0" prefHeight="18.0" prefWidth="114.0" text="Motivation Quotes" textFill="#474747bd" />
+      <ImageView fitHeight="18.0" fitWidth="25.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/motivation-icon-main.png" />
+         </image>
+      </ImageView>
+      <Separator layoutX="140.0" layoutY="5.0" orientation="VERTICAL" prefHeight="18.0" prefWidth="5.0" />
+      <Label layoutX="148.0" layoutY="5.0" prefHeight="18.0" prefWidth="114.0" text="06/01/2006" textFill="#474747bd" />
+      <TextArea layoutX="-1.0" layoutY="23.0" prefHeight="85.0" prefWidth="279.0" style="-fx-background-color: transparent;" text="Life is what happens when you're making &#10;other plans." />
+   </children>
+</AnchorPane>
