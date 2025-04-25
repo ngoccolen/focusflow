@@ -43,7 +43,6 @@ public class LogInController {
 	        query.setParameter("username", username);
 	        query.setMaxResults(1); // Giới hạn kết quả
 
-	        // Lấy danh sách kết quả
 	        java.util.List<User> users = query.getResultList();
 
 	        if (users.isEmpty()) {
