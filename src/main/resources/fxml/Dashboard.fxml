@@ -23,7 +23,8 @@
    <children>
       <AnchorPane prefHeight="758.0" prefWidth="86.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
-            <ImageView fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="avatarIcon" fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleAvatarClick">
                <image>
                   <Image url="@../images/avatariconmain.png" />
                </image>
@@ -52,7 +53,8 @@
       </Label>
       <AnchorPane layoutX="106.0" layoutY="59.0" prefHeight="178.0" prefWidth="683.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
-            <ImageView fitHeight="206.0" fitWidth="197.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="avatarIcon" fitHeight="206.0" fitWidth="197.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true"
+            onMouseClicked="#handleAvatarClick">
                <image>
                   <Image url="@../images/human-icon-main.jpg" />
                </image>
