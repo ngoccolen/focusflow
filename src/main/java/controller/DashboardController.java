@@ -19,8 +19,15 @@ public class DashboardController {
 	@FXML private ImageView LogoutIcon;
 	@FXML private Label welcomeLabel;
 	@FXML private ImageView avatarIcon;
-	private String username;
-	@FXML private Label emailLabel;
+	private User loggedInUser;
+	private Parent root;
+	public void setRoot(Parent root) {
+	    this.root = root;
+	}
+
+	public Parent getRoot() {
+	    return root;
+	}
 	public void initialize() {
         GiaoDienChinhIcon.setCursor(Cursor.HAND);
         LogoutIcon.setCursor(Cursor.HAND);
@@ -52,30 +59,43 @@ public class DashboardController {
 		initialize();
 	}
 	public void setLoggedInUser(User user) {
-		this.username = user.getUsername();
-		setWelcome();
-		if (user.getAvatar() != null) {
+	    this.loggedInUser = user;
+	    setWelcome();
+	    if (user.getAvatar() != null) {
 	        File avatarFile = new File(user.getAvatar());
 	        if (avatarFile.exists()) {
 	            avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
 	        }
 	    }
-		emailLabel.setText(user.getEmail());
 	}
+
 	public void setWelcome() {
-		welcomeLabel.setText("Hi! " + username + ", welcome!");
+		welcomeLabel.setText("Hi! " + loggedInUser.getUsername() + ", welcome!");
 	}
 	public void handleAvatarClick() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/hopTrangCaNhan.fxml"));
 			Parent root = loader.load();
-			Stage timerStage = new Stage();
-	        timerStage.setScene(new Scene(root));
-	        timerStage.show();
+			AvatarController avatarController = loader.getController();
+			avatarController.setUsername(this.loggedInUser);
+			avatarController.setDashboardController(this);// truyền cả đối tượng User
+
+			Stage avatarStage = new Stage();
+			avatarStage.setScene(new Scene(root));
+			avatarStage.show();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		initialize();
 	}
+	public void updateAvatarImage(String avatarPath) {
+	    if (avatarPath != null) {
+	        File avatarFile = new File(avatarPath);
+	        if (avatarFile.exists()) {
+	            avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
+	        }
+	    }
+	}
+
 
 }
