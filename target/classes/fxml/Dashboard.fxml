@@ -53,8 +53,7 @@
       </Label>
       <AnchorPane layoutX="106.0" layoutY="59.0" prefHeight="178.0" prefWidth="683.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
-            <ImageView fx:id="avatarIcon" fitHeight="206.0" fitWidth="197.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true"
-            onMouseClicked="#handleAvatarClick">
+            <ImageView fitHeight="206.0" fitWidth="197.0" layoutX="10.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/human-icon-main.jpg" />
                </image>
