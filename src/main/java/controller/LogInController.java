@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import Util.FXMLUtils;
 import Util.HibernateUtil;
 import Util.PasswordUtils;
 import javafx.fxml.FXML;
@@ -19,6 +20,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import model.User;
 
 public class LogInController {
@@ -64,13 +66,14 @@ public class LogInController {
 	        if (PasswordUtils.verifyPassword(password, user.getPassword())) {
 	            showAlert("Login successful");
 	            try {
-	                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
-	                Parent root = loader.load();
-	                DashboardController controller = loader.getController();
-	                controller.setLoggedInUser(user);
-	                Stage stage = (Stage) loginButton.getScene().getWindow();
-	                stage.setScene(new Scene(root));
-	                stage.show();
+	            	 Pair<Parent, DashboardController> dashboardPair = FXMLUtils.loadFXML("/fxml/Dashboard.fxml");
+	                 Parent dashboardRoot = dashboardPair.getKey();
+	                 DashboardController dashboardController = dashboardPair.getValue();
+	                 dashboardController.setLoggedInUser(user);
+
+	                 Stage stage = (Stage) loginButton.getScene().getWindow();
+	                 stage.setScene(new Scene(dashboardRoot));
+	                 stage.show();
 	            } catch (IOException e) {
 	                e.printStackTrace();
 	                System.out.println("Cannot switch to Home");
