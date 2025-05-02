@@ -193,8 +193,8 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <Button layoutX="718.0" layoutY="100.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="34.0" style="-fx-background-color: #bababa;" />
-      <ImageView fitHeight="18.0" fitWidth="21.0" layoutX="725.0" layoutY="104.0" pickOnBounds="true" preserveRatio="true">
+      <Button layoutX="717.0" layoutY="90.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="34.0" style="-fx-background-color: #bababa;" />
+      <ImageView fitHeight="18.0" fitWidth="18.0" layoutX="724.0" layoutY="94.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/triangle-icon-main.png" />
          </image>
