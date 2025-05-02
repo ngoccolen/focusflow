@@ -1,16 +1,21 @@
 package controller;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.YearMonth;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import model.User;
 
@@ -21,6 +26,13 @@ public class DashboardController {
 	@FXML private ImageView avatarIcon;
 	private User loggedInUser;
 	private Parent root;
+	@FXML private GridPane calendarGrid;
+	@FXML private Label monthLabel;
+	@FXML private Label yearLabel; 
+	@FXML private YearMonth currentYearMonth;
+	@FXML private ImageView rightArrow;
+	@FXML private ImageView leftArrow;
+	
 	public void setRoot(Parent root) {
 	    this.root = root;
 	}
@@ -32,6 +44,12 @@ public class DashboardController {
         GiaoDienChinhIcon.setCursor(Cursor.HAND);
         LogoutIcon.setCursor(Cursor.HAND);
         avatarIcon.setCursor(Cursor.HAND);
+        if (currentYearMonth == null) {
+            currentYearMonth = YearMonth.now();
+        }
+        updateCalendar();
+        rightArrow.setCursor(Cursor.HAND);
+        leftArrow.setCursor(Cursor.HAND);
     }
 	public void handleGDChinhClick (MouseEvent event){
 		try {
@@ -96,6 +114,34 @@ public class DashboardController {
 	        }
 	    }
 	}
-
+	public void updateCalendar() {
+		ObservableList<Node> children = calendarGrid.getChildren();
+		children.removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
+		LocalDate firstDayOfMonth = currentYearMonth.atDay(1);
+		int daysInMonth = currentYearMonth.lengthOfMonth();
+		int startDayOfWeek = firstDayOfMonth.getDayOfWeek().getValue();
+		
+		monthLabel.setText(String.valueOf(currentYearMonth.getMonthValue()));
+		yearLabel.setText(String.valueOf(currentYearMonth.getYear()));
+		int col = (startDayOfWeek % 7);
+		int row = 1;
+		for (int day = 1; day <= daysInMonth; day++) {
+			Label dayLabel = new Label(String.valueOf(day));
+			calendarGrid.add(dayLabel, col, row);
+			col++;
+			if (col == 7) {
+				col = 0;
+				row++;
+			}
+		}
+	}
+	public void handleLeftClick() {
+		currentYearMonth = currentYearMonth.minusMonths(1);
+		updateCalendar();
+	}
+	public void handleRightClick() {
+		currentYearMonth = currentYearMonth.plusMonths(1);
+		updateCalendar();
+	}
 
 }
