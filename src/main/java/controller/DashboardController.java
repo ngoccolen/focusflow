@@ -96,7 +96,7 @@ public class DashboardController {
 			Parent root = loader.load();
 			AvatarController avatarController = loader.getController();
 			avatarController.setUsername(this.loggedInUser);
-			avatarController.setDashboardController(this);// truyền cả đối tượng User
+			avatarController.setDashboardController(this);
 
 			Stage avatarStage = new Stage();
 			avatarStage.setScene(new Scene(root));
