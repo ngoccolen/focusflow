@@ -32,5 +32,10 @@
 			<type>1</type>
 			<location>C:/Users/ADMIN/Downloads/alarm.mp3</location>
 		</link>
+		<link>
+			<name>src/main/resources/images/icons8-loudspeaker-50.png</name>
+			<type>1</type>
+			<location>C:/Users/ADMIN/Downloads/icons8-loudspeaker-50.png</location>
+		</link>
 	</linkedResources>
 </projectDescription>

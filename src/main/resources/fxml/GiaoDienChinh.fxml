@@ -48,7 +48,7 @@
                 <RowConstraints maxHeight="26.4" minHeight="10.0" prefHeight="21.599996948242186" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ImageView fitHeight="45.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="spaceIcon" fitHeight="45.0" fitWidth="40.0" onMouseClicked="#handleSpaceClick" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/earth-icon-main.png" />
                      </image>
