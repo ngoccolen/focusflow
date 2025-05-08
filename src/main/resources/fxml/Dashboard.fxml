@@ -23,8 +23,7 @@
    <children>
       <AnchorPane prefHeight="758.0" prefWidth="86.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
-            <ImageView fx:id="avatarIcon" fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true"
-            onMouseClicked="#handleAvatarClick">
+            <ImageView fx:id="avatarIcon" fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" onMouseClicked="#handleAvatarClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/avatariconmain.png" />
                </image>
@@ -103,88 +102,86 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label text="Sun" GridPane.columnIndex="6">
+                        <Label style="-fx-alignment: center;" text="Sun" GridPane.columnIndex="6">
                            <font>
                               <Font name="Arial Black" size="12.0" />
                            </font>
                         </Label>
-                        <Label layoutX="10.0" layoutY="16.0" text="Sat" GridPane.columnIndex="5">
+                        <Label layoutX="10.0" layoutY="16.0" style="-fx-alignment: center;" text="Sat" GridPane.columnIndex="5">
                            <font>
                               <Font name="Arial Black" size="12.0" />
                            </font>
                         </Label>
-                        <Label layoutX="10.0" layoutY="16.0" text="Fri" GridPane.columnIndex="4">
+                        <Label layoutX="10.0" layoutY="16.0" style="-fx-alignment: center;" text="Fri" GridPane.columnIndex="4">
                            <font>
                               <Font name="Arial Black" size="12.0" />
                            </font>
                         </Label>
-                        <Label layoutX="10.0" layoutY="16.0" text="Thu" GridPane.columnIndex="3">
+                        <Label layoutX="10.0" layoutY="16.0" style="-fx-alignment: center;" text="Thu" GridPane.columnIndex="3">
                            <font>
                               <Font name="Arial Black" size="12.0" />
                            </font>
                         </Label>
-                        <Label layoutX="10.0" layoutY="16.0" text="Wed" GridPane.columnIndex="2">
+                        <Label layoutX="10.0" layoutY="16.0" style="-fx-alignment: center;" text="Wed" GridPane.columnIndex="2">
                            <font>
                               <Font name="Arial Black" size="12.0" />
                            </font>
                         </Label>
-                        <Label layoutX="10.0" layoutY="16.0" text="Tue" GridPane.columnIndex="1">
+                        <Label layoutX="10.0" layoutY="16.0" style="-fx-alignment: center;" text="Tue" GridPane.columnIndex="1">
                            <font>
                               <Font name="Arial Black" size="12.0" />
                            </font>
                         </Label>
-                        <Label layoutX="50.0" layoutY="16.0" text="Mon">
+                        <Label layoutX="50.0" layoutY="16.0" style="-fx-alignment: center;" text="Mon">
                            <font>
                               <Font name="Arial Black" size="12.0" />
                            </font>
                         </Label>
                         <Label GridPane.rowIndex="1" />
-                        <Label layoutX="10.0" layoutY="47.0"  GridPane.columnIndex="6" GridPane.rowIndex="1" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="3" GridPane.rowIndex="1" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="1" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                         <Label layoutX="10.0" layoutY="47.0" GridPane.rowIndex="4" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <Label layoutX="10.0" layoutY="47.0" GridPane.rowIndex="3" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <Label layoutX="10.0" layoutY="47.0" GridPane.rowIndex="2" />
                         <Label layoutX="10.0" layoutY="138.0" GridPane.rowIndex="5" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                        <Label layoutX="90.0" layoutY="77.0" GridPane.columnIndex="4" GridPane.rowIndex="3" />
-                        <Label layoutX="10.0" layoutY="47.0" GridPane.columnIndex="4" GridPane.rowIndex="2" />
-                        <Label layoutX="10.0" layoutY="16.0" GridPane.columnIndex="3" GridPane.rowIndex="5" />
-                        <Label layoutX="10.0" layoutY="16.0" GridPane.columnIndex="2" GridPane.rowIndex="5" />
-                        <Label layoutX="50.0" layoutY="77.0" GridPane.columnIndex="3" GridPane.rowIndex="4" />
-                        <Label layoutX="10.0" layoutY="77.0" GridPane.columnIndex="3" GridPane.rowIndex="3" />
-                        <Label layoutX="10.0" layoutY="77.0" GridPane.columnIndex="2" GridPane.rowIndex="4" />
-                        <Label layoutX="130.0" layoutY="108.0" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                        <Label layoutX="50.0" layoutY="77.0" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                        <Label layoutX="50.0" layoutY="77.0" GridPane.columnIndex="4" GridPane.rowIndex="5" />
-                        <Label layoutX="50.0" layoutY="77.0" GridPane.columnIndex="4" GridPane.rowIndex="4" />
-                        <Label layoutX="50.0" layoutY="47.0" GridPane.columnIndex="6" GridPane.rowIndex="4" />
-                        <Label layoutX="50.0" layoutY="47.0" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                        <Label layoutX="50.0" layoutY="47.0" GridPane.columnIndex="6" GridPane.rowIndex="3" />
-                        <Label layoutX="50.0" layoutY="47.0" GridPane.columnIndex="6" GridPane.rowIndex="2" />
-                        <Label layoutX="90.0" layoutY="168.0" GridPane.columnIndex="6" GridPane.rowIndex="5" />
-                        <Label layoutX="50.0" layoutY="168.0" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <Label layoutX="90.0" layoutY="77.0" style="-fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                        <Label layoutX="10.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                        <Label layoutX="10.0" layoutY="16.0" style="-fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                        <Label layoutX="10.0" layoutY="16.0" style="-fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                        <Label layoutX="50.0" layoutY="77.0" style="-fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                        <Label layoutX="10.0" layoutY="77.0" style="-fx-alignment: center;" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                        <Label layoutX="10.0" layoutY="77.0" style="-fx-alignment: center;" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                        <Label layoutX="130.0" layoutY="108.0" style="-fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                        <Label layoutX="50.0" layoutY="77.0" style="-fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                        <Label layoutX="50.0" layoutY="77.0" style="-fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                        <Label layoutX="50.0" layoutY="77.0" style="-fx-alignment: center;" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                        <Label layoutX="50.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="4" />
+                        <Label layoutX="50.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                        <Label layoutX="50.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="3" />
+                        <Label layoutX="50.0" layoutY="47.0" style="-fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="2" />
+                        <Label layoutX="90.0" layoutY="168.0" style="-fx-alignment: center;" GridPane.columnIndex="6" GridPane.rowIndex="5" />
+                        <Label layoutX="50.0" layoutY="168.0" style="-fx-alignment: center;" GridPane.columnIndex="5" GridPane.rowIndex="5" />
                      </children>
                   </GridPane>
                </children>
             </HBox>
-            <ImageView fx:id="leftArrow" fitHeight="22.0" fitWidth="19.0" layoutX="263.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" rotate="-90.0"
-            onMouseClicked="#handleLeftClick">
+            <ImageView fx:id="leftArrow" fitHeight="22.0" fitWidth="19.0" layoutX="263.0" layoutY="47.0" onMouseClicked="#handleLeftClick" pickOnBounds="true" preserveRatio="true" rotate="-90.0">
                <image>
                   <Image url="@/images/triangle-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="rightArrow" fitHeight="22.0" fitWidth="19.0" layoutX="174.0" layoutY="47.0" pickOnBounds="true" preserveRatio="true" rotate="90.0"
-            onMouseClicked="#handleRightClick">
+            <ImageView fx:id="rightArrow" fitHeight="22.0" fitWidth="19.0" layoutX="174.0" layoutY="47.0" onMouseClicked="#handleRightClick" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                <image>
                   <Image url="@/images/triangle-icon-main.png" />
                </image>

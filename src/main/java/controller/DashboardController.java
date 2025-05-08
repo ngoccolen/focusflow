@@ -55,6 +55,8 @@ public class DashboardController {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GiaoDienChinh.fxml"));
 			Parent root = loader.load();
+		    GDChinhController gdchinhController = loader.getController();
+		    gdchinhController.setLoggedInUser(this.loggedInUser);
 			Stage stage = (Stage) GiaoDienChinhIcon.getScene().getWindow();
 			stage.setScene(new Scene(root));
 			stage.show();
@@ -62,7 +64,6 @@ public class DashboardController {
 			e.printStackTrace();
             System.out.println("Cannot switch to Giao Dien Chinh");
 		}
-		initialize();
 	}
 	public void handleLogoutClick (MouseEvent event) {
 		try {
