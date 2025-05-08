@@ -28,14 +28,39 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>src/main/resources/audio/02. Guren no Yumiya.mp3</name>
+			<type>1</type>
+			<location>C:/Users/ADMIN/Downloads/02. Guren no Yumiya.mp3</location>
+		</link>
+		<link>
 			<name>src/main/resources/audio/alarm.mp3</name>
 			<type>1</type>
 			<location>C:/Users/ADMIN/Downloads/alarm.mp3</location>
 		</link>
 		<link>
+			<name>src/main/resources/audio/not-lazy-just-chill-268462.mp3</name>
+			<type>1</type>
+			<location>C:/Users/ADMIN/Downloads/not-lazy-just-chill-268462.mp3</location>
+		</link>
+		<link>
 			<name>src/main/resources/images/icons8-loudspeaker-50.png</name>
 			<type>1</type>
 			<location>C:/Users/ADMIN/Downloads/icons8-loudspeaker-50.png</location>
+		</link>
+		<link>
+			<name>src/main/resources/images/tải xuống.gif</name>
+			<type>1</type>
+			<location>C:/Users/ADMIN/Downloads/tải xuống.gif</location>
+		</link>
+		<link>
+			<name>src/main/resources/video/1e0247f1828b92b4086b9a522b3228e0.mp4</name>
+			<type>1</type>
+			<location>C:/Users/ADMIN/Downloads/1e0247f1828b92b4086b9a522b3228e0.mp4</location>
+		</link>
+		<link>
+			<name>src/main/resources/video/941e10c8c92ed5b3e59d83ec1415938a.mp4</name>
+			<type>1</type>
+			<location>C:/Users/ADMIN/Downloads/941e10c8c92ed5b3e59d83ec1415938a.mp4</location>
 		</link>
 	</linkedResources>
 </projectDescription>

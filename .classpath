@@ -17,7 +17,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry including="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
 		<attributes>
 			<attribute name="optional" value="true"/>
