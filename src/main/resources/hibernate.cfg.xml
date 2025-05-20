@@ -5,9 +5,9 @@
         <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1:3306/FocusFlow</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">loveSKZ143@</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.show_sql">true</property>
         <property name="hibernate.current_session_context_class">thread</property>
         <mapping class="model.User"/>
+        <mapping class="model.Song"/>
     </session-factory>
 </hibernate-configuration>

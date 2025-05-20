@@ -1,5 +1,4 @@
 package Util;
-
 import java.security.MessageDigest;
 
 public class PasswordUtils {
