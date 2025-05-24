@@ -9,9 +9,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.media.MediaView?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="691.0" prefWidth="1344.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GDChinhController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="728.0" prefWidth="1370.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GDChinhController">
    <children>
-      <AnchorPane prefHeight="691.0" prefWidth="86.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
+      <AnchorPane prefHeight="728.0" prefWidth="86.0" style="-fx-background-color: #ffffff;">
          <children>
             <ImageView fx:id="avatarIcon" fitHeight="65.0" fitWidth="60.0" layoutX="13.0" layoutY="14.0" onMouseClicked="#handleAvatarClick" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -20,22 +20,22 @@
             </ImageView>
             <ImageView fx:id="DashboardIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="98.0" onMouseClicked="#handleDashboardClick" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/home-icon-main.png" />
+                  <Image url="@../images/icons8-home-64.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/study-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="LogoutIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="617.0" onMouseClicked="#handleLogoutClick" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="LogoutIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="650.0" onMouseClicked="#handleLogoutClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/logout-icon-main.png" />
                </image>
             </ImageView>
          </children>
       </AnchorPane>
-      <MediaView fx:id="mainVideo" fitHeight="695.0" fitWidth="1470.0" layoutX="86.0" />
+      <MediaView fx:id="mainVideo" fitHeight="728.0" fitWidth="1470.0" layoutX="86.0" />
       <AnchorPane layoutX="541.0" layoutY="14.0" prefHeight="63.0" prefWidth="278.0" style="-fx-background-radius: 15px; -fx-background-color: #ffffff;">
          <children>
             <GridPane layoutX="46.0" layoutY="3.0" prefHeight="60.0" prefWidth="330.0">

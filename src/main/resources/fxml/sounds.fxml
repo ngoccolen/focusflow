@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Slider?>
@@ -9,7 +10,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="484.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SoundController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="259.0" prefWidth="484.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SoundController">
    <children>
       <AnchorPane layoutY="45.0" prefHeight="154.0" prefWidth="483.0" style="-fx-background-color: #5345bf; -fx-background-radius: 15px;">
          <children>
@@ -23,21 +24,30 @@
                   <Font name="Calibri Bold" size="18.0" />
                </font>
             </Label>
-            <ListView fx:id="songListView" layoutX="154.0" layoutY="14.0" prefHeight="134.0" prefWidth="314.0" style="-fx-background-color: #5345bf; -fx-background-radius: 15px;"/>
+            <ListView fx:id="songListView" layoutX="154.0" layoutY="14.0" prefHeight="134.0" prefWidth="314.0" style="-fx-background-color: #5345bf; -fx-background-radius: 15px;" />
          </children>
       </AnchorPane>
-      <Slider fx:id="progressSlider" layoutX="137.0" layoutY="222.0" prefHeight="14.0" prefWidth="213.0" />
+      <Slider fx:id="progressSlider" layoutX="137.0" layoutY="222.0" prefHeight="14.0" prefWidth="213.0">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Slider>
       <ImageView fx:id="previousIcon" fitHeight="22.0" fitWidth="25.0" layoutX="28.0" layoutY="218.0" onMouseClicked="#handlePreviousClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/icons8-rewind-50.png" />
          </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </ImageView>
       <ImageView fx:id="nextIcon" fitHeight="22.0" fitWidth="25.0" layoutX="102.0" layoutY="218.0" onMouseClicked="#handleNextClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@../images/icons8-rewind-50.png" />
          </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </ImageView>
-      <Label layoutX="351.0" layoutY="214.0" prefHeight="29.0" prefWidth="38.0">
+      <Label fx:id="durationMainLabel" layoutX="351.0" layoutY="214.0" prefHeight="29.0" prefWidth="38.0">
          <font>
             <Font name="Calibri Light" size="14.0" />
          </font>
@@ -51,24 +61,39 @@
          <image>
             <Image url="@../images/reset-icon1-main.png" />
          </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </ImageView>
-      <ImageView fitHeight="30.0" fitWidth="22.0" layoutX="434.0" layoutY="218.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="addIcon" fitHeight="30.0" fitWidth="22.0" layoutX="434.0" layoutY="218.0" onMouseClicked="#handleAddClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/plus-icon-main.png" />
          </image>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </ImageView>
-      <Slider fx:id="volumeSlider" layoutX="285.0" layoutY="17.0" prefHeight="14.0" prefWidth="170.0" />
+      <Slider fx:id="volumeSlider" layoutX="285.0" layoutY="17.0" prefHeight="14.0" prefWidth="170.0">
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor></Slider>
       <StackPane layoutX="61.0" layoutY="214.0" prefHeight="30.0" prefWidth="29.0">
          <children>
             <ImageView fx:id="playIcon" fitHeight="30.0" fitWidth="29.0" onMouseClicked="#handlePlayClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/icons8-play-50.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
             <ImageView fx:id="pauseIcon" fitHeight="30.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="@../images/icons8-pause-50.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
          </children>
       </StackPane>
@@ -78,11 +103,17 @@
                <image>
                   <Image url="@../images/icons8-sound-50.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
             <ImageView fx:id="NoSoundIcon" fitHeight="29.0" fitWidth="29.0" pickOnBounds="true" preserveRatio="true" visible="false">
                <image>
                   <Image url="@../images/icons8-no-sound-50.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
          </children>
       </StackPane>

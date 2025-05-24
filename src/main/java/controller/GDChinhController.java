@@ -90,8 +90,8 @@ public class GDChinhController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Space.fxml"));
             Parent root = loader.load();
 
-            spaceController controller = loader.getController(); // Lấy controller chuẩn
-            controller.setGDChinhController(this);               // Truyền tham chiếu GDChinhController
+            spaceController controller = loader.getController();
+            controller.setGDChinhController(this);  // Truyền controller trước
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -100,6 +100,7 @@ public class GDChinhController {
             e.printStackTrace();
         }
     }
+
     public void setLoggedInUser(User user) {
 	    this.loggedInUser = user;
 	    if (user.getAvatar() != null) {
@@ -163,6 +164,22 @@ public class GDChinhController {
     		e.printStackTrace();
     	}
     }
+    public User getCurrentUser() {
+        return loggedInUser;
+    }
+    public void setVolume(double volume) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setVolume(volume);
+        }
+    }
+
+    public void setMuted(boolean muted) {
+        if (mediaPlayer != null) {
+            mediaPlayer.setMute(muted);
+        }
+    }
+
+
 
     
 }

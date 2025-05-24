@@ -10,8 +10,10 @@ import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import DAO.SongDAO;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
@@ -22,23 +24,29 @@ import javafx.util.Duration;
 import model.Song;
 
 public class SoundController {
-    private List<File> listSongs = new ArrayList<>();
+    private ArrayList<File> listSongs = new ArrayList<>();
     private MediaPlayer mediaPlayer;
     private boolean isPlaying = false;
     private boolean isMuted = false;
     private double lastVolume = 0.5;
     private Duration duration;
     private int currentIndex = 0;
-    private model.User currentUser; // gán khi đăng nhập
+    private model.User currentUser;
 
-    @FXML private ImageView playIcon, pauseIcon, soundIcon, NoSoundIcon;
+    @FXML private ImageView playIcon, pauseIcon, soundIcon, NoSoundIcon, addIcon;
     @FXML private Slider volumeSlider, progressSlider;
     @FXML private ListView<AnchorPane> songListView;
+    @FXML private Label durationMainLabel;
 
     public void initialize() {
-        loadSongsToListView(); // chỉ load danh sách bài hát, chưa play
+        loadSongsToListView();
         setupPlayerUI();
         setupListViewClickHandler();
+        soundIcon.setOnMouseClicked(e -> handleMuteClick());
+        NoSoundIcon.setOnMouseClicked(e -> handleMuteClick());
+        playIcon.setOnMouseClicked(e -> handlePlayClick());
+        pauseIcon.setOnMouseClicked(e -> handlePlayClick());
+        addIcon.setOnMouseClicked(e -> handleAddClick());
     }
 
     private void setupPlayerUI() {
@@ -65,83 +73,92 @@ public class SoundController {
             int selectedIndex = newVal.intValue();
             if (selectedIndex >= 0 && selectedIndex < listSongs.size()) {
                 currentIndex = selectedIndex;
-                loadSong(listSongs.get(currentIndex), currentIndex);
-                mediaPlayer.play();
-                isPlaying = true;
-                playIcon.setVisible(false);
-                pauseIcon.setVisible(true);
+                loadSong(listSongs.get(currentIndex), currentIndex, true);
             }
         });
     }
 
+    private void loadSongsFromDB() {
+        List<Song> songsFromDB = SongDAO.getAllSongs();
+        for (Song song : songsFromDB) {
+            File songFile = new File(song.getFile_path());
+            if (songFile.exists() && !containsFile(listSongs, songFile)) {
+                listSongs.add(songFile);
+            }
+        }
+    }
+
+    private boolean containsFile(List<File> files, File target) {
+        for (File file : files) {
+            if (file.getAbsolutePath().equals(target.getAbsolutePath())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void loadSongsToListView() {
+        // Load từ thư mục /audio
         URL resource = getClass().getResource("/audio");
         if (resource != null) {
             try {
                 File musicDir = new File(resource.toURI());
                 File[] files = musicDir.listFiles((dir, name) -> name.toLowerCase().endsWith("mp3"));
                 if (files != null) {
-                    listSongs = Arrays.asList(files);
+                    listSongs = new ArrayList<>(Arrays.asList(files));
                 }
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
         }
 
+        // Load từ database
+        loadSongsFromDB();
+
+        // Hiển thị lên ListView
         songListView.getItems().clear();
         for (int i = 0; i < listSongs.size(); i++) {
             File file = listSongs.get(i);
-            String durationStr = getDurationString(file);
             int index = i + 1;
 
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ListSong.fxml"));
                 AnchorPane item = loader.load();
-                
-                // Thêm dòng này để đảm bảo controller được khởi tạo
                 ListSongController controller = loader.getController();
-                if (controller != null) {
-                    controller.setData(index, file.getName(), durationStr);
-                } else {
-                    System.err.println("Controller is null for item: " + file.getName());
-                }
 
+                controller.setData(index, file.getName(), "--:--");
                 songListView.getItems().add(item);
+
+                // Lấy thời lượng bất đồng bộ
+                Media media = new Media(file.toURI().toString());
+                MediaPlayer player = new MediaPlayer(media);
+                player.setOnReady(() -> {
+                    Duration duration = media.getDuration();
+                    int minutes = (int) duration.toMinutes();
+                    int seconds = (int) duration.toSeconds() % 60;
+                    String durationStr = String.format("%02d:%02d", minutes, seconds);
+
+                    Platform.runLater(() -> controller.setData(index, file.getName(), durationStr));
+                    player.dispose();
+                });
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         if (!listSongs.isEmpty()) {
-            loadSong(listSongs.get(0), 0);
+            loadSong(listSongs.get(0), 0, false);
         }
     }
 
-    private String getDurationString(File songFile) {
-        Media media = new Media(songFile.toURI().toString());
-        final String[] durationStr = {"00:00"};
-        CountDownLatch latch = new CountDownLatch(1);
-
-        MediaPlayer player = new MediaPlayer(media);
-        player.setOnReady(() -> {
-            Duration duration = media.getDuration();
-            int minutes = (int) duration.toMinutes();
-            int seconds = (int) duration.toSeconds() % 60;
-            durationStr[0] = String.format("%02d:%02d", minutes, seconds);
-            player.dispose();
-            latch.countDown();
-        });
-
-        try {
-            latch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return durationStr[0];
+    private void updatePlayPauseIcons(boolean isNowPlaying) {
+        playIcon.setVisible(!isNowPlaying);
+        pauseIcon.setVisible(isNowPlaying);
+        if (isNowPlaying) pauseIcon.toFront();
+        else playIcon.toFront();
     }
 
-    private void loadSong(File songFile, int index) {
+    private void loadSong(File songFile, int index, boolean autoPlay) {
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.dispose();
@@ -154,81 +171,126 @@ public class SoundController {
         mediaPlayer.setOnReady(() -> {
             duration = mediaPlayer.getTotalDuration();
             progressSlider.setMax(duration.toSeconds());
-            volumeSlider.setValue(mediaPlayer.getVolume() * 100);
 
             String durationStr = String.format("%02d:%02d",
                     (int) duration.toMinutes(), (int) duration.toSeconds() % 60);
             int songNumber = index + 1;
 
-            saveSongToDB(songNumber, songFile.getName(), durationStr);
+            // Chỉ lưu vào DB nếu chưa tồn tại
+            Song existingSong = SongDAO.getSongByPath(songFile.getAbsolutePath());
+            if (existingSong == null) {
+                saveSongToDB(songNumber, songFile.getName(), durationStr, songFile.getAbsolutePath());
+            }
 
             mediaPlayer.currentTimeProperty().addListener((obs, oldTime, newTime) -> {
-                if (!progressSlider.isValueChanging() && duration.toSeconds() > 0) {
+                if (!progressSlider.isValueChanging()) {
                     progressSlider.setValue(newTime.toSeconds());
+                    int minutes = (int) newTime.toMinutes();
+                    int seconds = (int) newTime.toSeconds() % 60;
+                    durationMainLabel.setText(String.format("%02d:%02d", minutes, seconds));
                 }
             });
 
             mediaPlayer.setOnEndOfMedia(this::handleNextClick);
 
-            isPlaying = false;
-            playIcon.setVisible(true);
-            pauseIcon.setVisible(false);
+            if (autoPlay) {
+                mediaPlayer.play();
+                updatePlayPauseIcons(true);
+                isPlaying = true;
+            } else {
+                updatePlayPauseIcons(false);
+                isPlaying = false;
+            }
         });
     }
 
-    private void saveSongToDB(int index, String name, String duration) {
+    private void saveSongToDB(int index, String name, String duration, String filePath) {
         Song song = new Song();
         song.setSong_number(index);
         song.setSong_name(name);
         song.setDuration(duration);
-        song.setUser(currentUser);
+        song.setFile_path(filePath);
+        if (currentUser != null) {
+            song.getUsers().add(currentUser);
+        }
         SongDAO.save(song);
     }
 
+    // Các phương thức handleClick giữ nguyên như cũ
     @FXML
     public void handlePlayClick() {
         if (mediaPlayer == null) return;
 
-        if (isPlaying) {
+        MediaPlayer.Status status = mediaPlayer.getStatus();
+        if (status == MediaPlayer.Status.PLAYING) {
             mediaPlayer.pause();
-            playIcon.setVisible(true);
-            pauseIcon.setVisible(false);
+            updatePlayPauseIcons(false);
+            isPlaying = false;
         } else {
             mediaPlayer.play();
-            playIcon.setVisible(false);
-            pauseIcon.setVisible(true);
+            updatePlayPauseIcons(true);
+            isPlaying = true;
         }
-
-        if (pauseIcon.isVisible()) pauseIcon.toFront();
-        else playIcon.toFront();
-
-        isPlaying = !isPlaying;
     }
 
     @FXML
     public void handleNextClick() {
         if (listSongs == null || listSongs.isEmpty()) return;
-
         currentIndex = (currentIndex + 1) % listSongs.size();
-        loadSong(listSongs.get(currentIndex), currentIndex);
-        mediaPlayer.play();
-        isPlaying = true;
-        playIcon.setVisible(false);
-        pauseIcon.setVisible(true);
+        loadSong(listSongs.get(currentIndex), currentIndex, isPlaying);
     }
 
     @FXML
     public void handlePreviousClick() {
         if (listSongs == null || listSongs.isEmpty()) return;
-
         currentIndex = (currentIndex - 1 + listSongs.size()) % listSongs.size();
-        loadSong(listSongs.get(currentIndex), currentIndex);
-        mediaPlayer.play();
-        isPlaying = true;
-        playIcon.setVisible(false);
-        pauseIcon.setVisible(true);
+        loadSong(listSongs.get(currentIndex), currentIndex, isPlaying);
     }
 
+    @FXML
+    public void handleAddClick() {
+        javafx.stage.FileChooser fileChooser = new javafx.stage.FileChooser();
+        fileChooser.setTitle("Chọn bài hát MP3");
+        fileChooser.getExtensionFilters().add(new javafx.stage.FileChooser.ExtensionFilter("MP3 Files", "*.mp3"));
+
+        File selectedFile = fileChooser.showOpenDialog(null);
+        if (selectedFile != null && !containsFile(listSongs, selectedFile)) {
+            listSongs.add(selectedFile);
+
+            int index = listSongs.size();
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/ListSong.fxml"));
+                AnchorPane item = loader.load();
+                ListSongController controller = loader.getController();
+
+                controller.setData(index, selectedFile.getName(), "--:--");
+                songListView.getItems().add(item);
+
+                Media media = new Media(selectedFile.toURI().toString());
+                MediaPlayer player = new MediaPlayer(media);
+                player.setOnReady(() -> {
+                    Duration duration = media.getDuration();
+                    int minutes = (int) duration.toMinutes();
+                    int seconds = (int) duration.toSeconds() % 60;
+                    String durationStr = String.format("%02d:%02d", minutes, seconds);
+
+                    Platform.runLater(() -> {
+                        controller.setData(index, selectedFile.getName(), durationStr);
+                        // Chỉ lưu vào DB nếu chưa tồn tại
+                        Song existingSong = SongDAO.getSongByPath(selectedFile.getAbsolutePath());
+                        if (existingSong == null) {
+                            saveSongToDB(index, selectedFile.getName(), durationStr, selectedFile.getAbsolutePath());
+                        }
+                    });
+                    player.dispose();
+                });
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // Các phương thức handleResetClick và handleMuteClick giữ nguyên như cũ
     @FXML
     public void handleResetClick() {
         if (mediaPlayer != null) {
@@ -254,5 +316,9 @@ public class SoundController {
             NoSoundIcon.setVisible(true);
         }
         isMuted = !isMuted;
+    }
+
+    public void setCurrentUser(model.User user) {
+        this.currentUser = user;
     }
 }

@@ -11,6 +11,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javafx.version>21.0.1</javafx.version>
     </properties>
 
     <dependencies>
@@ -21,8 +22,7 @@
             <version>6.4.4.Final</version>
         </dependency>
 
-        <!-- Jakarta Persistence API (for @Entity, @Id, etc.) -->
-
+        <!-- Jakarta Persistence API -->
         <dependency>
             <groupId>jakarta.persistence</groupId>
             <artifactId>jakarta.persistence-api</artifactId>
@@ -36,21 +36,24 @@
             <version>8.0.33</version>
         </dependency>
 
-        <!-- JavaFX (if you're using JavaFX 11+ and not SDK bundled) -->
-        <!-- You can skip this if you're using JavaFX SDK from outside -->
+        <!-- JavaFX modules (using version 21.0.1) -->
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
-            <version>17.0.2</version>
+            <version>${javafx.version}</version>
         </dependency>
         <dependency>
-    <groupId>org.openjfx</groupId>
-    <artifactId>javafx-media</artifactId>
-    <version>17.0.2</version>
-</dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>${javafx.version}</version>
+        </dependency>
 
-
-        <!-- Logger for Hibernate (optional) -->
+        <!-- Logger for Hibernate -->
         <dependency>
             <groupId>org.jboss.logging</groupId>
             <artifactId>jboss-logging</artifactId>
@@ -59,28 +62,24 @@
     </dependencies>
 
     <build>
-    <sourceDirectory>src</sourceDirectory>
-    <resources>
-        <resource>
-            <directory>resources</directory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </resource>
-        <resource>
-            <directory>src/main/resources</directory>
-            <includes>
-                <include>**/*.fxml</include>
-                <include>**/*.css</include>
-                <include>**/*.mp4</include> <!-- Quan trọng -->
-                <include>**/*.txt</include>
-                <include>**/*.*</include>
-            </includes>
-        </resource>
-    </resources>
-</build>
-
-
-
-
+        <sourceDirectory>src</sourceDirectory>
+        <resources>
+            <resource>
+                <directory>resources</directory>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.fxml</include>
+                    <include>**/*.css</include>
+                    <include>**/*.mp4</include>
+                    <include>**/*.txt</include>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 </project>

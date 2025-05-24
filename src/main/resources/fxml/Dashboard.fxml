@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
@@ -19,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1125.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1125.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
       <AnchorPane prefHeight="758.0" prefWidth="86.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px;">
          <children>
@@ -30,18 +31,27 @@
             </ImageView>
             <ImageView fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/home-icon-main.png" />
+                  <Image url="@../images/icons8-home-64.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
             <ImageView fx:id="GiaoDienChinhIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="156.0" onMouseClicked="#handleGDChinhClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/study-icon-main.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
             <ImageView fx:id="LogoutIcon" fitHeight="47.0" fitWidth="45.0" layoutX="21.0" layoutY="699.0" onMouseClicked="#handleLogoutClick" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/logout-icon-main.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
          </children>
       </AnchorPane>
@@ -247,12 +257,12 @@
                   <Font name="Arial Black" size="14.0" />
                </font>
             </Label>
-            <LineChart layoutX="-1.0" layoutY="71.0" prefHeight="414.0" prefWidth="332.0" style="-fx-background-color: #ffffff;">
+            <LineChart fx:id="studyChart" layoutX="-1.0" layoutY="71.0" prefHeight="414.0" prefWidth="332.0" style="-fx-background-color: #ffffff;">
               <xAxis>
-                <CategoryAxis side="BOTTOM" />
+                <CategoryAxis fx:id="xAxis" side="BOTTOM" />
               </xAxis>
               <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis fx:id="yAxis" side="LEFT" />
               </yAxis>
             </LineChart>
             <Label layoutX="14.0" layoutY="34.0" prefHeight="20.0" prefWidth="96.0" text="keep trying ~" textFill="#717171">
@@ -260,7 +270,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <ComboBox layoutX="242.0" layoutY="21.0" prefHeight="26.0" prefWidth="74.0" promptText="Week" style="-fx-background-color: #ffffff;" />
+            <ComboBox fx:id="timeChoice" layoutX="242.0" layoutY="21.0" prefHeight="26.0" prefWidth="74.0" promptText="Week" style="-fx-background-color: #ffffff;" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="446.0" layoutY="465.0" prefHeight="263.0" prefWidth="347.0" style="-fx-background-color: #ffffff;">

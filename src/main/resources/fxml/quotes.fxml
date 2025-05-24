@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="279.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="279.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="34.0" layoutY="5.0" prefHeight="18.0" prefWidth="114.0" text="Motivation Quotes" textFill="#474747bd" />
       <ImageView fitHeight="18.0" fitWidth="25.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">

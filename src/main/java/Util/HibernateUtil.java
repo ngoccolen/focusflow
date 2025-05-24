@@ -1,7 +1,10 @@
 package Util;
 
 import model.Song;
+import model.StudyTime;
 import model.User;
+import model.Video;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -15,9 +18,10 @@ public class HibernateUtil {
             Configuration configuration = new Configuration();
             configuration.configure("hibernate.cfg.xml");
 
-            // Đăng ký các entity class
             configuration.addAnnotatedClass(Song.class);
             configuration.addAnnotatedClass(User.class);
+            configuration.addAnnotatedClass(Video.class);
+            configuration.addAnnotatedClass(StudyTime.class);
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties())

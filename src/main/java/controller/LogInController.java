@@ -28,7 +28,7 @@ public class LogInController {
 	@FXML private PasswordField passwordField;
 	@FXML private Button loginButton;
 	@FXML private TextField visiblePasswordField;
-	@FXML private ImageView eyeIcon;
+	@FXML private ImageView eyeIcon, noEyeIcon;
 	private boolean isPasswordVisible = false;
 	@FXML private Label signUpLabel;
 	
@@ -61,7 +61,7 @@ public class LogInController {
 	            return;
 	        }
 
-	        User user = users.get(0); // Lấy user đầu tiên
+	        User user = users.get(0); 
 
 	        if (PasswordUtils.verifyPassword(password, user.getPassword())) {
 	            showAlert("Login successful");
@@ -88,18 +88,27 @@ public class LogInController {
 	}
 
 	public void initialize() {
-		visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
-		visiblePasswordField.setVisible(false);
+	    visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
+	    visiblePasswordField.setVisible(false);
 	    visiblePasswordField.setManaged(false);
+
+	    eyeIcon.setVisible(false);
+	    noEyeIcon.setVisible(true);
+
 	    hand();
 	}
 	public void togglePasswordVisibility() {
-		isPasswordVisible = !isPasswordVisible;
+	    isPasswordVisible = !isPasswordVisible;
+
 	    passwordField.setVisible(!isPasswordVisible);
 	    passwordField.setManaged(!isPasswordVisible);
 	    visiblePasswordField.setVisible(isPasswordVisible);
 	    visiblePasswordField.setManaged(isPasswordVisible);
+
+	    eyeIcon.setVisible(isPasswordVisible);     // icon con mắt hiện khi password hiện
+	    noEyeIcon.setVisible(!isPasswordVisible);  // icon gạch mắt hiện khi password ẩn
 	}
+
 	public void handleSignUpClick() {
 		try {
 			Parent loginView = FXMLLoader.load(getClass().getResource("/fxml/SignUp.fxml"));

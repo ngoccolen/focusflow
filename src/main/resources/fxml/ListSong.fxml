@@ -1,16 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.171"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="controller.ListSongController"
-            prefHeight="50.0" prefWidth="300.0">
+<AnchorPane prefHeight="24.0" prefWidth="300.0" style="-fx-background-color: #5345bf;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ListSongController">
 
     <children>
-        <Label fx:id="indexLabel" layoutX="10.0" layoutY="15.0" text="1" />
-        <Label fx:id="songNameLabel" layoutX="50.0" layoutY="15.0" text="Tên bài hát" />
-        <Label fx:id="durationLabel" layoutX="220.0" layoutY="15.0" text="03:45" />
+        <Label fx:id="indexLabel" layoutX="10.0" layoutY="7.0" text="1" textFill="WHITE">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+        <Label fx:id="songNameLabel" layoutX="51.0" layoutY="7.0" text="Tên bài hát" textFill="WHITE">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
+        <Label fx:id="durationLabel" layoutX="250.0" layoutY="7.0" text="03:45" textFill="WHITE">
+         <font>
+            <Font size="13.0" />
+         </font></Label>
     </children>
+   <cursor>
+      <Cursor fx:constant="HAND" />
+   </cursor>
 </AnchorPane>

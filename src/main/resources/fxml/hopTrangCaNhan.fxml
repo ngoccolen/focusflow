@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane prefHeight="368.0" prefWidth="304.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane prefHeight="368.0" prefWidth="304.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1"
 fx:controller="controller.AvatarController">
    <children>
       <ImageView fx:id="avatarIcon" fitHeight="150.0" fitWidth="186.0" layoutX="70.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
