@@ -13,7 +13,7 @@ public class StudyTimeDAO {
     // Thay đổi để đảm bảo singleton được sử dụng đúng
     private static final StudyTimeDAO instance = new StudyTimeDAO();
     
-    private StudyTimeDAO() {}
+    public StudyTimeDAO() {}
     
     public static StudyTimeDAO getInstance() {
         return instance;
