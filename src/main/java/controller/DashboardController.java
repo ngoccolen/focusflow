@@ -1,16 +1,16 @@
 package controller;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.time.YearMonth;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TreeMap;
+import java.util.*;
+import java.util.concurrent.*;
 
+import service.StudySessionService;
+import DAO.EventDAO;
 import DAO.StudyTimeDAO;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,50 +19,34 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Dialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
+import javafx.scene.chart.*;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import model.Event;
 import model.StudyTime;
 import model.User;
 
 public class DashboardController {
 
-    // FXML Components
-    @FXML private ImageView GiaoDienChinhIcon;
-    @FXML private ImageView LogoutIcon;
-    @FXML private Label welcomeLabel;
-    @FXML private ImageView avatarIcon;
+    @FXML private ImageView GiaoDienChinhIcon, LogoutIcon, avatarIcon, rightArrow, leftArrow;
+    @FXML private Label welcomeLabel, monthLabel, yearLabel;
     @FXML private GridPane calendarGrid;
-    @FXML private Label monthLabel;
-    @FXML private Label yearLabel;
-    @FXML private ImageView rightArrow;
-    @FXML private ImageView leftArrow;
     @FXML private BarChart<String, Number> studyChart;
     @FXML private CategoryAxis xAxis;
     @FXML private NumberAxis yAxis;
-    @FXML private ComboBox<String> timeChoice;
+    @FXML private ComboBox<String> timeChoice, calendarViewMode;
+    @FXML private VBox eventList;
 
-    // Application state
     private YearMonth currentYearMonth;
     private User loggedInUser;
     private Parent root;
     private int daysToShow = 7;
-    
-    // DAO instance
+
     private final StudyTimeDAO studyTimeDAO = StudyTimeDAO.getInstance();
 
     @FXML
@@ -70,13 +54,19 @@ public class DashboardController {
         setupUIComponents();
         setupChart();
         setupTimeChoiceComboBox();
-        
+        setupCalendarViewMode();
         currentYearMonth = YearMonth.now();
         updateCalendar();
+        startReminderScheduler();
+    }
+
+    private void setupCalendarViewMode() {
+        calendarViewMode.getItems().addAll("Ngày", "Tuần", "Tháng");
+        calendarViewMode.setValue("Tháng");
+        calendarViewMode.setOnAction(e -> updateCalendar());
     }
 
     private void setupUIComponents() {
-        // Set cursor for interactive elements
         GiaoDienChinhIcon.setCursor(Cursor.HAND);
         LogoutIcon.setCursor(Cursor.HAND);
         avatarIcon.setCursor(Cursor.HAND);
@@ -90,48 +80,29 @@ public class DashboardController {
         yAxis.setLabel("Hours");
         yAxis.setTickUnit(1);
         yAxis.setAutoRanging(true);
-        
         yAxis.setTickLabelFormatter(new NumberAxis.DefaultFormatter(yAxis) {
             @Override
             public String toString(Number object) {
                 return String.format("%.1fh", object.doubleValue());
             }
         });
-        
         studyChart.setCategoryGap(5);
-        studyChart.setBarGap(3); 
+        studyChart.setBarGap(3);
     }
 
     private void setupTimeChoiceComboBox() {
-        timeChoice.getItems().addAll(
-            "Last 7 days", 
-            "Last 14 days", 
-            "Last 30 days", 
-            "Last 3 months",
-            "Custom range"
-        );
+        timeChoice.getItems().addAll("Last 7 days", "Last 14 days", "Last 30 days", "Last 3 months", "Custom range");
         timeChoice.setValue("Last 7 days");
-        
         timeChoice.setOnAction(e -> handleTimeChoiceSelection());
     }
 
     private void handleTimeChoiceSelection() {
         switch(timeChoice.getValue()) {
-            case "Last 7 days": 
-                daysToShow = 7; 
-                break;
-            case "Last 14 days": 
-                daysToShow = 14; 
-                break;
-            case "Last 30 days": 
-                daysToShow = 30; 
-                break;
-            case "Last 3 months": 
-                daysToShow = 90; 
-                break;
-            case "Custom range": 
-                showCustomDateDialog(); 
-                return;
+            case "Last 7 days": daysToShow = 7; break;
+            case "Last 14 days": daysToShow = 14; break;
+            case "Last 30 days": daysToShow = 30; break;
+            case "Last 3 months": daysToShow = 90; break;
+            case "Custom range": showCustomDateDialog(); return;
         }
         loadChartData();
     }
@@ -163,9 +134,8 @@ public class DashboardController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GiaoDienChinh.fxml"));
             Parent root = loader.load();
-            GDChinhController gdchinhController = loader.getController();
-            gdchinhController.setLoggedInUser(this.loggedInUser);
-            
+            GDChinhController controller = loader.getController();
+            controller.setLoggedInUser(this.loggedInUser);
             Stage stage = (Stage) GiaoDienChinhIcon.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -173,12 +143,11 @@ public class DashboardController {
             showErrorAlert("Navigation Error", "Cannot switch to main interface: " + e.getMessage());
         }
     }
-    
+
     public void handleLogoutClick(MouseEvent event) {
         try {
-            // Kết thúc phiên học nếu đang hoạt động
-            StudySessionService.getInstance().endStudySession();
-            
+            StudySessionService service = StudySessionService.getInstance();
+            if (service != null) service.endStudySession();
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUp.fxml"));
             Parent root = loader.load();
             Stage stage = (Stage) LogoutIcon.getScene().getWindow();
@@ -189,8 +158,7 @@ public class DashboardController {
         }
     }
 
-    @FXML
-    public void handleAvatarClick() {
+    public void handleAvatarClick(MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/hopTrangCaNhan.fxml"));
             Parent root = loader.load();
@@ -206,41 +174,224 @@ public class DashboardController {
         }
     }
 
-    public void updateAvatarImage(String avatarPath) {
-        if (avatarPath != null) {
-            File avatarFile = new File(avatarPath);
-            if (avatarFile.exists()) {
-                avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
-            }
-        }
-    }
-
     public void updateCalendar() {
-        // Clear existing day labels
+        if (calendarGrid == null || currentYearMonth == null) return;
         ObservableList<Node> children = calendarGrid.getChildren();
         children.removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
 
-        LocalDate firstDayOfMonth = currentYearMonth.atDay(1);
+        LocalDate firstDay = currentYearMonth.atDay(1);
         int daysInMonth = currentYearMonth.lengthOfMonth();
-        int startDayOfWeek = firstDayOfMonth.getDayOfWeek().getValue();
+        int startCol = firstDay.getDayOfWeek().getValue() % 7;
 
-        // Update month and year labels
-        monthLabel.setText(String.valueOf(currentYearMonth.getMonthValue()));
-        yearLabel.setText(String.valueOf(currentYearMonth.getYear()));
+        if (monthLabel != null) monthLabel.setText(String.valueOf(currentYearMonth.getMonthValue()));
+        if (yearLabel != null) yearLabel.setText(String.valueOf(currentYearMonth.getYear()));
 
-        // Add day labels to calendar grid
-        int col = (startDayOfWeek % 7);
-        int row = 1;
-
+        int col = startCol, row = 1;
         for (int day = 1; day <= daysInMonth; day++) {
             Label dayLabel = new Label(String.valueOf(day));
+            dayLabel.setStyle("-fx-alignment: center;");
             calendarGrid.add(dayLabel, col, row);
+            int finalDay = day;
+            dayLabel.setOnMouseClicked(e -> handleDateClick(currentYearMonth.atDay(finalDay)));
+            loadEventsForDay(day, dayLabel);
             col++;
-            if (col == 7) {
-                col = 0;
-                row++;
-            }
+            if (col == 7) { col = 0; row++; }
         }
+    }
+
+    private void loadEventsForDay(int day, Label dayLabel) {
+        if (loggedInUser == null) return;
+        LocalDate date = currentYearMonth.atDay(day);
+        List<Event> events = EventDAO.getInstance().getEventsByDate(loggedInUser, date);
+        if (!events.isEmpty()) {
+            Label indicator = new Label("•");
+            indicator.setStyle("-fx-text-fill: red; -fx-font-weight: bold;");
+            calendarGrid.add(indicator, GridPane.getColumnIndex(dayLabel), GridPane.getRowIndex(dayLabel));
+        }
+    }
+
+    private void handleDateClick(LocalDate selectedDate) {
+        eventList.getChildren().clear();
+        List<Event> events = EventDAO.getInstance().getEventsByDate(loggedInUser, selectedDate);
+        for (Event ev : events) addEventToList(ev);
+        openEventDialog(selectedDate);
+    }
+
+    private void addEventToList(Event ev) {
+        HBox hbox = new HBox(10);
+        hbox.setStyle("-fx-background-color: #ffffff;");
+
+        Label timeLabel = new Label(ev.getTime().toString());
+        timeLabel.setPrefWidth(56);
+        Label eventLabel = new Label(ev.getDescription());
+        eventLabel.setPrefWidth(139);
+
+        ImageView changeIcon = new ImageView(new Image("/images/icons8-pencil-48.png"));
+        changeIcon.setFitHeight(26);
+        changeIcon.setFitWidth(27);
+        changeIcon.setCursor(Cursor.HAND);
+        changeIcon.setOnMouseClicked(e -> openEditDialog(ev));
+
+        ImageView deleteIcon = new ImageView(new Image("/images/icons8-trash-can-48.png"));
+        deleteIcon.setFitHeight(26);
+        deleteIcon.setFitWidth(37);
+        deleteIcon.setCursor(Cursor.HAND);
+        deleteIcon.setOnMouseClicked(e -> {
+            EventDAO.getInstance().deleteEvent(ev.getId());
+            eventList.getChildren().remove(hbox);
+        });
+
+        hbox.getChildren().addAll(timeLabel, eventLabel, changeIcon, deleteIcon);
+        eventList.getChildren().add(hbox);
+    }
+
+    private void openEditDialog(Event ev) {
+        Dialog<Event> dialog = new Dialog<>();
+        dialog.setTitle("Chỉnh sửa sự kiện");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10); grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField descriptionField = new TextField(ev.getDescription());
+        ComboBox<Integer> hourBox = new ComboBox<>();
+        ComboBox<Integer> minuteBox = new ComboBox<>();
+        ComboBox<String> reminderBox = new ComboBox<>();
+
+        for (int i = 0; i < 24; i++) hourBox.getItems().add(i);
+        for (int i = 0; i < 60; i += 5) minuteBox.getItems().add(i);
+        reminderBox.getItems().addAll("15 phút trước", "2 ngày trước", "Không nhắc");
+
+        hourBox.setValue(ev.getTime().getHour());
+        minuteBox.setValue(ev.getTime().getMinute());
+
+        grid.add(new Label("Nội dung:"), 0, 0);
+        grid.add(descriptionField, 1, 0);
+        grid.add(new Label("Giờ:"), 0, 1);
+        grid.add(hourBox, 1, 1);
+        grid.add(new Label("Phút:"), 0, 2);
+        grid.add(minuteBox, 1, 2);
+        grid.add(new Label("Nhắc nhở:"), 0, 3);
+        grid.add(reminderBox, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                ev.setDescription(descriptionField.getText());
+                ev.setTime(LocalTime.of(hourBox.getValue(), minuteBox.getValue()));
+                return ev;
+            }
+            return null;
+        });
+
+        Optional<Event> result = dialog.showAndWait();
+        result.ifPresent(updated -> {
+            EventDAO.getInstance().updateEvent(updated);
+            handleDateClick(updated.getDate());
+        });
+    }
+
+    private void openEventDialog(LocalDate selectedDate) {
+        Dialog<Event> dialog = new Dialog<>();
+        dialog.setTitle("Thêm sự kiện");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10); grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField descriptionField = new TextField();
+        ComboBox<Integer> hourBox = new ComboBox<>();
+        ComboBox<Integer> minuteBox = new ComboBox<>();
+        ComboBox<String> reminderBox = new ComboBox<>();
+
+        for (int i = 0; i < 24; i++) hourBox.getItems().add(i);
+        for (int i = 0; i < 60; i += 5) minuteBox.getItems().add(i);
+        reminderBox.getItems().addAll("15 phút trước", "2 ngày trước", "Không nhắc");
+
+        grid.add(new Label("Nội dung:"), 0, 0);
+        grid.add(descriptionField, 1, 0);
+        grid.add(new Label("Giờ:"), 0, 1);
+        grid.add(hourBox, 1, 1);
+        grid.add(new Label("Phút:"), 0, 2);
+        grid.add(minuteBox, 1, 2);
+        grid.add(new Label("Nhắc nhở:"), 0, 3);
+        grid.add(reminderBox, 1, 3);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter(button -> {
+            if (button == ButtonType.OK) {
+                Event ev = new Event();
+                ev.setUserId(loggedInUser.getId());
+                ev.setDate(selectedDate);
+                ev.setTime(LocalTime.of(hourBox.getValue(), minuteBox.getValue()));
+                ev.setDescription(descriptionField.getText());
+
+                String reminderStr = reminderBox.getValue();
+                if ("15 phút trước".equals(reminderStr)) ev.setReminderOffset(Duration.ofMinutes(15));
+                else if ("2 ngày trước".equals(reminderStr)) ev.setReminderOffset(Duration.ofDays(2));
+                else ev.setReminderOffset(Duration.ZERO);
+
+                return ev;
+            }
+            return null;
+        });
+
+        Optional<Event> result = dialog.showAndWait();
+        result.ifPresent(event -> {
+            EventDAO.getInstance().saveEvent(event);
+            addEventToList(event);
+        });
+    }
+
+    private void startReminderScheduler() {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(() -> {
+            List<Event> reminders = EventDAO.getInstance().getUpcomingReminders(LocalDateTime.now());
+            Platform.runLater(() -> {
+                for (Event ev : reminders) {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Nhắc nhở");
+                    alert.setHeaderText("Sự kiện sắp diễn ra");
+                    alert.setContentText(ev.getDescription() + " | " + ev.getTime());
+                    alert.show();
+                }
+            });
+        }, 0, 1, TimeUnit.MINUTES);
+    }
+
+    private void showCustomDateDialog() {
+        Dialog<Pair<LocalDate, LocalDate>> dialog = new Dialog<>();
+        dialog.setTitle("Select Date Range");
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        DatePicker startDatePicker = new DatePicker(LocalDate.now().minusDays(6));
+        DatePicker endDatePicker = new DatePicker(LocalDate.now());
+
+        grid.add(new Label("From:"), 0, 0);
+        grid.add(startDatePicker, 1, 0);
+        grid.add(new Label("To:"), 0, 1);
+        grid.add(endDatePicker, 1, 1);
+
+        dialog.getDialogPane().setContent(grid);
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                return new Pair<>(startDatePicker.getValue(), endDatePicker.getValue());
+            }
+            return null;
+        });
+
+        Optional<Pair<LocalDate, LocalDate>> result = dialog.showAndWait();
+        result.ifPresent(dateRange -> {
+            daysToShow = (int) ChronoUnit.DAYS.between(dateRange.getKey(), dateRange.getValue()) + 1;
+            loadChartData();
+        });
     }
 
     @FXML
@@ -349,45 +500,6 @@ public class DashboardController {
         // Đặt khoảng cách giữa các nhãn trục X
         xAxis.setTickLabelGap(5);
         xAxis.setTickLength(5);
-    }
-
-    private void showCustomDateDialog() {
-        Dialog<Pair<LocalDate, LocalDate>> dialog = new Dialog<>();
-        dialog.setTitle("Select Date Range");
-        
-        // Set up buttons
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        
-        // Create date pickers
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(20, 150, 10, 10));
-        
-        DatePicker startDatePicker = new DatePicker(LocalDate.now().minusDays(6));
-        DatePicker endDatePicker = new DatePicker(LocalDate.now());
-        
-        grid.add(new Label("From:"), 0, 0);
-        grid.add(startDatePicker, 1, 0);
-        grid.add(new Label("To:"), 0, 1);
-        grid.add(endDatePicker, 1, 1);
-        
-        dialog.getDialogPane().setContent(grid);
-        
-        // Convert result to pair of dates
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                return new Pair<>(startDatePicker.getValue(), endDatePicker.getValue());
-            }
-            return null;
-        });
-        
-        Optional<Pair<LocalDate, LocalDate>> result = dialog.showAndWait();
-        
-        result.ifPresent(dateRange -> {
-            daysToShow = (int) ChronoUnit.DAYS.between(dateRange.getKey(), dateRange.getValue()) + 1;
-            loadChartData();
-        });
     }
 
     private void showErrorAlert(String title, String message) {
