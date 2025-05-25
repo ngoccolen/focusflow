@@ -10,15 +10,12 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class StudyTimeDAO {
-
-    private static StudyTimeDAO instance;
+    // Thay đổi để đảm bảo singleton được sử dụng đúng
+    private static final StudyTimeDAO instance = new StudyTimeDAO();
     
     private StudyTimeDAO() {}
     
-    public static synchronized StudyTimeDAO getInstance() {
-        if (instance == null) {
-            instance = new StudyTimeDAO();
-        }
+    public static StudyTimeDAO getInstance() {
         return instance;
     }
 
@@ -39,16 +36,22 @@ public class StudyTimeDAO {
 
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            throw new RuntimeException("Failed to save or update study time", e);
         }
     }
 
     private StudyTime getStudyTimeByDate(Session session, User user, LocalDate date) {
-        return session.createQuery("FROM StudyTime WHERE user = :user AND studyDate = :date", StudyTime.class)
-                     .setParameter("user", user)
-                     .setParameter("date", date)
-                     .uniqueResult();
+        try {
+            return session.createQuery("FROM StudyTime WHERE user = :user AND studyDate = :date", StudyTime.class)
+                         .setParameter("user", user)
+                         .setParameter("date", date)
+                         .uniqueResult();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get study time by date", e);
+        }
     }
 
     public List<StudyTime> getStudyTimeForUser(User user) {
@@ -56,16 +59,22 @@ public class StudyTimeDAO {
             return session.createQuery("FROM StudyTime WHERE user = :user ORDER BY studyDate", StudyTime.class)
                          .setParameter("user", user)
                          .list();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get study time for user", e);
         }
     }
 
     public List<StudyTime> getStudyTimeForUserBetweenDates(User user, LocalDate startDate, LocalDate endDate) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM StudyTime WHERE user = :user AND studyDate BETWEEN :start AND :end ORDER BY studyDate", StudyTime.class)
-                         .setParameter("user", user)
-                         .setParameter("start", startDate)
-                         .setParameter("end", endDate)
-                         .list();
+            return session.createQuery(
+                "FROM StudyTime WHERE user = :user AND studyDate BETWEEN :start AND :end ORDER BY studyDate", 
+                StudyTime.class)
+                .setParameter("user", user)
+                .setParameter("start", startDate)
+                .setParameter("end", endDate)
+                .list();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get study time between dates", e);
         }
     }
     
@@ -75,6 +84,8 @@ public class StudyTimeDAO {
                                 .setParameter("user", user)
                                 .uniqueResult();
             return total != null ? total : 0.0;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get total study hours", e);
         }
     }
 }

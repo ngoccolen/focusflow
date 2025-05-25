@@ -24,6 +24,8 @@ public class StudyTime {
     @Column(name = "study_date")
     private LocalDate studyDate;
     private double hours;
+    public StudyTime() {
+    }
     public StudyTime(User user, LocalDate studyDate, double hours) {
         this.user = user;
         this.studyDate = studyDate;
