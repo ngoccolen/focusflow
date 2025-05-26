@@ -38,6 +38,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 import model.StudyTime;
 import model.User;
+import service.StudySessionService;
 
 public class DashboardController {
 
@@ -173,7 +174,8 @@ public class DashboardController {
             showErrorAlert("Navigation Error", "Cannot switch to main interface: " + e.getMessage());
         }
     }
-    
+
+    @FXML
     public void handleLogoutClick(MouseEvent event) {
         try {
             // Kết thúc phiên học nếu đang hoạt động

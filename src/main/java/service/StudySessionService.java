@@ -18,6 +18,8 @@ public class StudySessionService {
         }
         return instance;
     }
+
+    // Thêm phương thức kiểm tra trạng thái
     public boolean isActive() {
         return isActive;
     }
@@ -27,7 +29,7 @@ public class StudySessionService {
             this.currentUser = user;
             this.sessionStartTime = System.currentTimeMillis();
             this.isActive = true;
-            System.out.println("Bắt đầu phiên học - User: " + user.getUsername());
+            System.out.println("[StudySession] Bắt đầu tính giờ học cho user: " + user.getUsername());
         }
     }
 
@@ -35,7 +37,7 @@ public class StudySessionService {
         if (isActive && currentUser != null) {
             double hoursStudied = (System.currentTimeMillis() - sessionStartTime) / (1000.0 * 60 * 60.0);
             StudyTimeDAO.getInstance().saveOrUpdateStudyTime(currentUser, LocalDate.now(), hoursStudied);
-            System.out.println("Đã lưu " + hoursStudied + " giờ học");
+            System.out.println("[StudySession] Đã lưu " + hoursStudied + " giờ học");
             isActive = false;
         }
     }
