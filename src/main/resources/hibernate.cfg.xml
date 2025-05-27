@@ -11,6 +11,6 @@
         <mapping class="model.Song"/>
         <mapping class="model.StudyTime"/>
         <mapping class="model.Video"/>
-        <mapping class="model.Event"/>
+        <mapping class="model.Quote"/>
     </session-factory>
 </hibernate-configuration>

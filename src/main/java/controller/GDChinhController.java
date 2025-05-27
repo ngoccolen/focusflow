@@ -16,7 +16,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Pair;
 import model.User;
 import service.StudySessionService; // Thêm import cho service
@@ -28,7 +30,7 @@ public class GDChinhController {
     @FXML private ImageView timeIcon;
     @FXML private ImageView spaceIcon;
     @FXML private ImageView avatarIcon;
-    @FXML private ImageView soundIcon;
+    @FXML private ImageView soundIcon, quoteIcon;
     @FXML private MediaView mainVideo;
     
     private User loggedInUser;
@@ -46,6 +48,7 @@ public class GDChinhController {
         spaceIcon.setCursor(Cursor.HAND);
         avatarIcon.setCursor(Cursor.HAND);
         soundIcon.setCursor(Cursor.HAND);
+        quoteIcon.setCursor(Cursor.HAND);
         
         // Bắt đầu tính thời gian học khi vào giao diện
         if (loggedInUser != null) {
@@ -119,6 +122,28 @@ public class GDChinhController {
             e.printStackTrace();
         }
     }
+    @FXML
+    public void handleQuotesClick(MouseEvent event) {
+        try {
+            Pair<Parent, Object> pair = FXMLUtils.loadFXML("/fxml/quotes.fxml");
+            Parent root = pair.getKey();
+            QuotesController quotesController = (QuotesController) pair.getValue();
+            
+            // Set transparent background
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            
+            // Set stage properties
+            Stage stage = new Stage();
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.setScene(scene);
+           
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public void setLoggedInUser(User user) {
         this.loggedInUser = user;
