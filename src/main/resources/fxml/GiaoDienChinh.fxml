@@ -35,7 +35,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <MediaView fx:id="mainVideo" fitHeight="850.0" fitWidth="1420.0" layoutX="86.0" />
+      <MediaView fx:id="mainVideo" fitHeight="850.0" fitWidth="1450.0" layoutX="86.0" />
       <AnchorPane layoutX="613.0" layoutY="14.0" prefHeight="63.0" prefWidth="278.0" style="-fx-background-radius: 15px; -fx-background-color: #ffffff;">
          <children>
             <GridPane layoutX="46.0" layoutY="3.0" prefHeight="60.0" prefWidth="330.0">
@@ -60,7 +60,7 @@
                         <Image url="@../images/speaker-icon-main.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="45.0" fitWidth="40.0" layoutX="110.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                  <ImageView fx:id ="calendarIcon" fitHeight="45.0" fitWidth="40.0" layoutX="110.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" onMouseClicked="#handleCalendarClick">
                      <image>
                         <Image url="@../images/calendar-icon-main.png" />
                      </image>
@@ -91,12 +91,12 @@
                      </image>
                   </ImageView>
                   <Label prefHeight="18.0" prefWidth="45.0" text=" Timer" GridPane.rowIndex="1" />
-                  <ImageView fitHeight="45.0" fitWidth="40.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1">
+                  <ImageView fx:id="taskIcon" fitHeight="45.0" fitWidth="40.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" onMouseClicked="#handleTaskClick">
                      <image>
                         <Image url="@../images/task-icon-main.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="45.0" fitWidth="40.0" layoutX="110.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2">
+                  <ImageView fx:id="noteIcon" fitHeight="45.0" fitWidth="40.0" layoutX="110.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" onMouseClicked="#handleNoteClick">
                      <image>
                         <Image url="@../images/note-icon-main.png" />
                      </image>

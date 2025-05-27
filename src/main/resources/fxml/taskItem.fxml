@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="80.0" prefWidth="393.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TaskItemController">
+   <children>
+      <AnchorPane fx:id="taskItemPane" layoutX="9.0" onMouseClicked="#handleSelect" prefHeight="53.0" prefWidth="372.0" style="-fx-border-color: #d1d1d1; -fx-background-radius: 15px; -fx-border-radius: 5px;">
+         <children>
+            <CheckBox fx:id="completeBox" layoutX="14.0" layoutY="10.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="346.0">
+            
+               <font>
+                  <Font name="Arial" size="13.0" />
+               </font>
+            </CheckBox>
+            <ImageView fx:id="editImage" fitHeight="18.0" fitWidth="21.0" layoutX="351.0" layoutY="5.0" onMouseClicked="#handleEditClick" pickOnBounds="true" preserveRatio="true">
+               <image>
+               <Image url="@../images/icons8-more-24.png" />
+               </image>
+            </ImageView>
+            <Label fx:id="date" layoutX="35.0" layoutY="37.0" prefHeight="18.0" prefWidth="84.0" textFill="#f27d5d" />
+            <Label fx:id="starttimeLabel" layoutX="105.0" layoutY="37.0" prefHeight="18.0" prefWidth="91.0" textFill="#f27d5d" />
+            <ImageView fitHeight="18.0" fitWidth="21.0" layoutX="14.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/icons8-calendar-24.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="alertIcon" fitHeight="34.0" fitWidth="44.0" layoutX="186.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../images/icons8-bell-100.png" />
+               </image>
+            </ImageView>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>
