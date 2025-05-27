@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Line?>
+
+<AnchorPane fx:id="redLinePane" prefHeight="1.5" prefWidth="250.0"
+            xmlns="http://javafx.com/javafx/21.0.1"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="controller.RedlineController">
+    <children>
+        <Line fx:id="redLine" startX="0" startY="0" endX="250" endY="0"
+              stroke="RED" strokeWidth="1.5" />
+    </children>
+</AnchorPane>

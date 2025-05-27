@@ -32,10 +32,14 @@ public class GDChinhController {
     @FXML private ImageView avatarIcon;
     @FXML private ImageView soundIcon, quoteIcon;
     @FXML private MediaView mainVideo;
+    @FXML private ImageView taskIcon;
+    @FXML private ImageView calendarIcon;
+    @FXML private ImageView noteIcon;
     
     private User loggedInUser;
     private MediaPlayer mediaPlayer;
     private StudySessionService studySessionService; // Thêm service
+    private Stage quotesStage;
 
     public void initialize() {
         // Khởi tạo service
@@ -49,6 +53,9 @@ public class GDChinhController {
         avatarIcon.setCursor(Cursor.HAND);
         soundIcon.setCursor(Cursor.HAND);
         quoteIcon.setCursor(Cursor.HAND);
+        taskIcon.setCursor(Cursor.HAND);
+        calendarIcon.setCursor(Cursor.HAND);
+        noteIcon.setCursor(Cursor.HAND);
         
         // Bắt đầu tính thời gian học khi vào giao diện
         if (loggedInUser != null) {
@@ -122,28 +129,43 @@ public class GDChinhController {
             e.printStackTrace();
         }
     }
+
     @FXML
     public void handleQuotesClick(MouseEvent event) {
         try {
+            // Nếu đang hiển thị thì không làm gì cả (hoặc có thể toFront())
+            if (quotesStage != null && quotesStage.isShowing()) {
+                return;
+            }
+
             Pair<Parent, Object> pair = FXMLUtils.loadFXML("/fxml/quotes.fxml");
             Parent root = pair.getKey();
             QuotesController quotesController = (QuotesController) pair.getValue();
             
-            // Set transparent background
             Scene scene = new Scene(root);
             scene.setFill(Color.TRANSPARENT);
             
-            // Set stage properties
-            Stage stage = new Stage();
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.setScene(scene);
-           
-            stage.show();
+            quotesStage = new Stage();
+            quotesStage.initStyle(StageStyle.TRANSPARENT);
+            quotesStage.setScene(scene);
+            
+            // Truyền stage vào controller
+            quotesController.setStage(quotesStage);
+            
+            // Hiển thị ở vị trí chuột
+            quotesStage.setX(event.getScreenX());
+            quotesStage.setY(event.getScreenY());
+            
+            // Quan trọng: Xử lý đóng cửa sổ
+            quotesStage.setOnCloseRequest(e -> {
+                quotesStage = null;
+            });
+            
+            quotesStage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 
     public void setLoggedInUser(User user) {
         this.loggedInUser = user;
@@ -229,6 +251,65 @@ public class GDChinhController {
     public void setMuted(boolean muted) {
         if (mediaPlayer != null) {
             mediaPlayer.setMute(muted);
+        }
+    }
+    public void handleTaskClick(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Task.fxml"));
+            Parent root = loader.load();
+
+            // Lấy controller và truyền User
+            TaskController taskController = loader.getController();
+            taskController.setLoggedInUser(loggedInUser);
+
+            Stage stage = new Stage();
+            stage.setTitle("Task Manager");
+            stage.setScene(new Scene(root));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Cannot load Task.fxml");
+        }
+    }
+    public void handleCalendarClick(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/calendar.fxml"));
+            Parent root = loader.load();
+
+            // Lấy controller của Cal.fxml
+            CalendarController calendarController = loader.getController();
+
+            // Truyền user đang đăng nhập vào CalendarController
+            calendarController.setLoggedInUser(loggedInUser);
+
+            Stage stage = new Stage();
+            stage.setTitle("Calendar");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+           
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Cannot load Cal.fxml");
+        }
+    }
+    @FXML
+    public void handleNoteClick(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Notes.fxml"));
+            Parent root = loader.load();
+
+            NoteController noteController = loader.getController();
+            noteController.setLoggedInUser(loggedInUser); 
+
+            Stage stage = new Stage();
+            stage.setTitle("Notes");
+            stage.setScene(new Scene(root));
+            stage.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Cannot load Notes.fxml");
         }
     }
 }

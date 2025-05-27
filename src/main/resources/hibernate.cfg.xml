@@ -12,5 +12,7 @@
         <mapping class="model.StudyTime"/>
         <mapping class="model.Video"/>
         <mapping class="model.Quote"/>
+        <mapping class="model.Note"/>
+        <mapping class="model.Task"/>
     </session-factory>
 </hibernate-configuration>

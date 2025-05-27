@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="387.0" prefWidth="348.0" style="-fx-background-color: #ffffff; -fx-background-radius: 15px; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 0, 4);" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CalendarController">
+   <children>
+      <ImageView fx:id="dayBefore" fitHeight="18.0" fitWidth="18.0" layoutX="77.0" layoutY="6.0" onMouseClicked="#handleDayBeforeClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+         <image>
+            <Image url="@../images/lonhon.PNG" />
+         </image>
+      </ImageView>
+      <Label fx:id="thuLabel" layoutX="100.0" layoutY="4.0" prefHeight="19.0" prefWidth="83.0">
+         <font>
+            <Font name="Cambria Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="179.0" layoutY="4.0" prefHeight="19.0" prefWidth="9.0" text=",">
+         <font>
+            <Font name="Cambria Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="monthLabel" layoutX="190.0" layoutY="4.0" prefHeight="18.0" prefWidth="34.0">
+         <font>
+            <Font name="Cambria Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="dayLabel" layoutX="231.0" layoutY="4.0" prefHeight="18.0" prefWidth="34.0">
+         <font>
+            <Font name="Cambria Bold" size="15.0" />
+         </font>
+      </Label>
+      <ImageView fx:id="dayAfter" fitHeight="18.0" fitWidth="18.0" layoutX="257.0" layoutY="6.0" onMouseClicked="#handleDayAfterClick" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../images/lonhon.PNG" />
+         </image>
+      </ImageView>
+      <Button fx:id="todayButton" layoutX="285.0" layoutY="2.0" mnemonicParsing="false" onMouseClicked="#handleTodayClick" prefHeight="26.0" prefWidth="50.0" style="-fx-background-color: #ffffff; -fx-border-color: #dedede; -fx-border-radius: 5px;" text="Today" />
+      <ScrollPane layoutY="34.0" prefHeight="347.0" prefWidth="348.0" style="-fx-border-color: #ffffff; -fx-background-color: #ffffff;">
+         <content>
+            <AnchorPane fx:id="mainSchedulePane" prefHeight="342.0" prefWidth="340.0">
+               <children>
+                  <AnchorPane fx:id="timePane" layoutY="-6.0" prefHeight="347.0" prefWidth="70.0" />
+                  <AnchorPane fx:id="taskPane" layoutX="70.0" prefHeight="341.0" prefWidth="270.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
