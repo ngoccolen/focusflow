@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="105.0" prefWidth="279.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="quotesPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="158.0" prefWidth="365.0" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.QuotesController">
    <children>
-      <Label layoutX="34.0" layoutY="5.0" prefHeight="18.0" prefWidth="114.0" text="Motivation Quotes" textFill="#474747bd" />
-      <ImageView fitHeight="18.0" fitWidth="25.0" layoutX="14.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/motivation-icon-main.png" />
-         </image>
-      </ImageView>
-      <Separator layoutX="140.0" layoutY="5.0" orientation="VERTICAL" prefHeight="18.0" prefWidth="5.0" />
-      <Label layoutX="148.0" layoutY="5.0" prefHeight="18.0" prefWidth="114.0" text="06/01/2006" textFill="#474747bd" />
-      <TextArea layoutX="-1.0" layoutY="23.0" prefHeight="85.0" prefWidth="279.0" style="-fx-background-color: transparent;" text="Life is what happens when you're making &#10;other plans." />
+      <Label layoutX="7.0" layoutY="5.0" prefHeight="20.0" prefWidth="148.0" text="Motivation Quotes" textFill="#ffffffbd">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="quoteDate" layoutX="183.0" layoutY="5.0" prefHeight="18.0" prefWidth="95.0" textFill="#ffffffbd">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="quoteContent" layoutY="35.0" prefHeight="79.0" prefWidth="366.0" textFill="white" wrapText="true">
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font></Label>
+      <Label fx:id="quoteAuthor" layoutX="176.0" layoutY="121.0" prefHeight="29.0" prefWidth="182.0" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+      <Button fx:id="closeButton" layoutX="327.0" layoutY="5.0" mnemonicParsing="false" onAction="#handleCloseQuotes" prefHeight="18.0" prefWidth="23.0" style="-fx-background-color: transparent;" text="X" textFill="WHITE">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Button>
    </children>
 </AnchorPane>

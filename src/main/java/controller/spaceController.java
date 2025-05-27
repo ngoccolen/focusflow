@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -30,9 +31,10 @@ public class spaceController {
 
     @FXML private VBox videoContainer;
     @FXML private Slider volumeSlider;
-    @FXML private ImageView soundIcon, noSoundIcon;
+    @FXML private ImageView soundIcon, noSoundIcon, searchIcon;
     @FXML private StackPane stackAll, stackStudy, stackPet, stackNature, stackLofi, stackAnime;
     @FXML private Label selectedLabel;
+    @FXML private TextField searchField;
 
     private boolean isMuted = false;
     private List<MediaPlayer> mediaPlayers = new ArrayList<>();
@@ -47,11 +49,11 @@ public class spaceController {
 
     public void setGDChinhController(GDChinhController controller) {
         this.gdchinhController = controller;
-        initData();
     }
 
     public void initialize() {
         volumeSlider.setValue(50);
+        initData();
 
         volumeSlider.valueProperty().addListener((obs, oldVal, newVal) -> {
             double volume = newVal.doubleValue() / 100.0;
@@ -88,8 +90,42 @@ public class spaceController {
             noSoundIcon.setVisible(false);
             soundIcon.setVisible(true);
         });
+        searchIcon.setOnMouseClicked(e -> handleSearchClick());
     }
+    private VBox createVideoBox(MediaPlayer mp, String title) {
+        MediaView mediaView = new MediaView(mp);
+        mediaView.setFitWidth(140);
+        mediaView.setFitHeight(100);
+        mediaView.setPreserveRatio(true);
+        mediaView.setSmooth(true);
 
+        Rectangle clip = new Rectangle(140, 100);
+        clip.setArcWidth(10);
+        clip.setArcHeight(10);
+        mediaView.setClip(clip);
+
+        Label label = new Label(title);
+        label.setStyle("-fx-font-size: 13px; -fx-text-alignment: center;");
+        label.setMaxWidth(Double.MAX_VALUE);
+        label.setAlignment(Pos.CENTER);
+
+        VBox.setVgrow(mediaView, Priority.NEVER);
+        VBox videoBox = new VBox(5, mediaView, label);
+        videoBox.setStyle("-fx-background-color: white; -fx-border-radius: 10; -fx-background-radius: 10;");
+        videoBox.setAlignment(Pos.CENTER);
+        videoBox.setPrefWidth(160);
+
+        mediaView.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            if (gdchinhController != null) {
+                gdchinhController.playVideo(title);
+                gdchinhController.setVolume(volumeSlider.getValue() / 100.0);
+                gdchinhController.setMuted(isMuted);
+            }
+            if (selectedLabel != null) selectedLabel.setText(title);
+        });
+
+        return videoBox;
+    }
     public void initData() {
         List<File> videoFiles = loadVideoFilesFromResource();
         if (videoFiles.isEmpty()) {
@@ -99,47 +135,37 @@ public class spaceController {
 
         videoContainer.getChildren().clear();
         mediaPlayers.clear();
+        List<Video> videos = videoDAO.getAll(); // LẤY VIDEO TỪ DATABASE
 
-        for (int i = 0; i < videoFiles.size(); i += 2) {
-            HBox videoRow = new HBox(20);
-            HBox labelRow = new HBox(20);
+        for (int i = 0; i < videos.size(); i += 2) {
+            HBox videoRow = new HBox(13);
             videoRow.setAlignment(Pos.CENTER);
-            labelRow.setAlignment(Pos.CENTER);
 
-            for (int j = i; j < i + 2 && j < videoFiles.size(); j++) {
-                File file = videoFiles.get(j);
-                String fileUri = file.toURI().toString();
-                String fileName = file.getName();
-                String title = fileName.substring(0, fileName.lastIndexOf("."));
+            for (int j = i; j < i + 2 && j < videos.size(); j++) {
+                Video video = videos.get(j);
+                String uri = video.getFilePath();
+                try {
+                    File f = new File(new URI(uri));
+                    if (!f.exists()) continue;
 
-                Media media = new Media(fileUri);
-                MediaPlayer mediaPlayer = new MediaPlayer(media);
-                mediaPlayer.setMute(true);
-                mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-                mediaPlayer.setAutoPlay(false);
-                mediaPlayer.pause();
-                mediaPlayers.add(mediaPlayer);
+                    Media media = new Media(uri);
+                    MediaPlayer mp = new MediaPlayer(media);
+                    mp.setMute(true);
+                    mp.pause();
+                    mp.setCycleCount(MediaPlayer.INDEFINITE);
+                    mediaPlayers.add(mp);
 
-                MediaView mediaView = createMediaView(mediaPlayer, fileName);
-                mediaView.setFitWidth(140);
-                mediaView.setFitHeight(100);
+                    VBox videoBox = createVideoBox(mp, video.getFileName());
+                    videoRow.getChildren().add(videoBox);
 
-                Label label = new Label(title);
-                HBox.setHgrow(label, Priority.ALWAYS);
-                label.setAlignment(Pos.CENTER);
-                label.setMaxWidth(Double.MAX_VALUE);
-                label.setStyle("-fx-font-size: 12px;");
-
-                videoRow.getChildren().add(mediaView);
-                labelRow.getChildren().add(label);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
-            VBox group = new VBox(5);
-            group.setAlignment(Pos.CENTER);
-            group.getChildren().addAll(videoRow, labelRow);
-
-            videoContainer.getChildren().add(group);
+            videoContainer.getChildren().add(videoRow);
         }
+
     }
 
     private void loadVideosByCategory(String category) {
@@ -151,10 +177,8 @@ public class spaceController {
         List<Video> videos = videoDAO.getByCategory(category);
 
         for (int i = 0; i < videos.size(); i += 2) {
-            HBox videoRow = new HBox(10);
-            HBox labelRow = new HBox(10);
+            HBox videoRow = new HBox(13);
             videoRow.setAlignment(Pos.CENTER);
-            labelRow.setAlignment(Pos.CENTER);
 
             for (int j = i; j < i + 2 && j < videos.size(); j++) {
                 Video video = videos.get(j);
@@ -170,31 +194,17 @@ public class spaceController {
                     mp.setCycleCount(MediaPlayer.INDEFINITE);
                     mediaPlayers.add(mp);
 
-                    MediaView mediaView = createMediaView(mp, video.getFileName());
-                    HBox.setHgrow(mediaView, Priority.ALWAYS);
-                    mediaView.setPreserveRatio(true);
-                    mediaView.setFitHeight(90);
-                    mediaView.setSmooth(true);
+                    VBox videoBox = createVideoBox(mp, video.getFileName());
+                    videoRow.getChildren().add(videoBox);
 
-                    Label label = new Label(video.getFileName());
-                    HBox.setHgrow(label, Priority.ALWAYS);
-                    label.setAlignment(Pos.CENTER);
-                    label.setMaxWidth(Double.MAX_VALUE);
-                    label.setStyle("-fx-font-size: 12px;");
-
-                    videoRow.getChildren().add(mediaView);
-                    labelRow.getChildren().add(label);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
-            VBox group = new VBox(5);
-            group.setAlignment(Pos.CENTER);
-            group.getChildren().addAll(videoRow, labelRow);
-
-            videoContainer.getChildren().add(group);
+            videoContainer.getChildren().add(videoRow);
         }
+
     }
 
     private void loadAllVideos() {
@@ -206,10 +216,8 @@ public class spaceController {
         List<Video> videos = videoDAO.getAll();
 
         for (int i = 0; i < videos.size(); i += 2) {
-            HBox videoRow = new HBox(10);
-            HBox labelRow = new HBox(10);
+            HBox videoRow = new HBox(13);
             videoRow.setAlignment(Pos.CENTER);
-            labelRow.setAlignment(Pos.CENTER);
 
             for (int j = i; j < i + 2 && j < videos.size(); j++) {
                 Video video = videos.get(j);
@@ -225,28 +233,17 @@ public class spaceController {
                     mp.setCycleCount(MediaPlayer.INDEFINITE);
                     mediaPlayers.add(mp);
 
-                    MediaView mediaView = createMediaView(mp, video.getFileName());
-                    mediaView.setFitHeight(90);
+                    VBox videoBox = createVideoBox(mp, video.getFileName());
+                    videoRow.getChildren().add(videoBox);
 
-                    Label label = new Label(video.getFileName());
-                    HBox.setHgrow(label, Priority.ALWAYS);
-                    label.setAlignment(Pos.CENTER);
-                    label.setMaxWidth(Double.MAX_VALUE);
-                    label.setStyle("-fx-font-size: 12px;");
-
-                    videoRow.getChildren().add(mediaView);
-                    labelRow.getChildren().add(label);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
-            VBox group = new VBox(10);
-            group.setAlignment(Pos.CENTER);
-            group.getChildren().addAll(videoRow, labelRow);
-
-            videoContainer.getChildren().add(group);
+            videoContainer.getChildren().add(videoRow);
         }
+
     }
 
     private void saveVideosByCategoryIfNotExists(String category) {
@@ -319,4 +316,53 @@ public class spaceController {
 
         return mediaView;
     }
+    @FXML
+    public void handleSearchClick() {
+        String keyword = searchField.getText().trim().toLowerCase();
+        if (keyword.isEmpty()) {
+            loadAllVideos(); // Nếu không nhập gì thì hiển thị tất cả
+            return;
+        }
+
+        videoContainer.getChildren().clear();
+        mediaPlayers.clear();
+
+        List<Video> videos = videoDAO.getAll();
+        List<Video> filtered = new ArrayList<>();
+
+        for (Video video : videos) {
+            if (video.getFileName().toLowerCase().contains(keyword)) {
+                filtered.add(video);
+            }
+        }
+
+        for (int i = 0; i < filtered.size(); i += 2) {
+            HBox videoRow = new HBox(13);
+            videoRow.setAlignment(Pos.CENTER);
+
+            for (int j = i; j < i + 2 && j < filtered.size(); j++) {
+                Video video = filtered.get(j);
+                String uri = video.getFilePath();
+                try {
+                    File f = new File(new URI(uri));
+                    if (!f.exists()) continue;
+
+                    Media media = new Media(uri);
+                    MediaPlayer mp = new MediaPlayer(media);
+                    mp.setMute(true);
+                    mp.pause();
+                    mp.setCycleCount(MediaPlayer.INDEFINITE);
+                    mediaPlayers.add(mp);
+
+                    VBox videoBox = createVideoBox(mp, video.getFileName());
+                    videoRow.getChildren().add(videoBox);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            videoContainer.getChildren().add(videoRow);
+        }
+    }
+
 }

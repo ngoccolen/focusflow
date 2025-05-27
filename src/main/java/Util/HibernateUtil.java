@@ -1,5 +1,6 @@
 package Util;
 
+import model.Quote;
 import model.Song;
 import model.StudyTime;
 import model.User;
@@ -22,6 +23,7 @@ public class HibernateUtil {
             configuration.addAnnotatedClass(User.class);
             configuration.addAnnotatedClass(Video.class);
             configuration.addAnnotatedClass(StudyTime.class);
+            configuration.addAnnotatedClass(Quote.class);
 
             ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
                     .applySettings(configuration.getProperties())

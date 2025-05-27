@@ -191,17 +191,17 @@
                   <Image url="@/images/triangle-icon-main.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="leftArrow" fitHeight="22.0" fitWidth="19.0" layoutX="174.0" layoutY="47.0" onMouseClicked="#handleLeftClick" pickOnBounds="true" preserveRatio="true" rotate="90.0">
+            <ImageView fx:id="leftArrow" fitHeight="22.0" fitWidth="19.0" layoutX="165.0" layoutY="47.0" onMouseClicked="#handleLeftClick" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                <image>
                   <Image url="@/images/triangle-icon-main.png" />
                </image>
             </ImageView>
-            <Label fx:id="yearLabel" layoutX="222.0" layoutY="48.0">
+            <Label fx:id="yearLabel" layoutX="215.0" layoutY="48.0" prefHeight="18.0" prefWidth="45.0">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="monthLabel" layoutX="205.0" layoutY="48.0">
+            <Label fx:id="monthLabel" layoutX="190.0" layoutY="48.0" prefHeight="18.0" prefWidth="18.0">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
@@ -270,7 +270,7 @@
                   <Font size="14.0" />
                </font>
             </Label>
-            <ComboBox fx:id="timeChoice" layoutX="242.0" layoutY="21.0" prefHeight="26.0" prefWidth="74.0" promptText="Week" style="-fx-background-color: #ffffff;" />
+            <ComboBox fx:id="timeChoice" layoutX="210.0" layoutY="21.0" prefHeight="26.0" prefWidth="106.0" promptText="Week" style="-fx-background-color: #ffffff;" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="446.0" layoutY="465.0" prefHeight="263.0" prefWidth="347.0" style="-fx-background-color: #ffffff;">
