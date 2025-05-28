@@ -1,3 +1,4 @@
+
 package controller;
 
 import javafx.fxml.FXML;
@@ -6,11 +7,13 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
 import model.Task;
 import java.time.format.DateTimeFormatter;
-public class RedlineController {
-    
-    @FXML private AnchorPane redLinePane;
-    @FXML private Line redLine;
-    
+public class DeadlineDashboardController {
+    @FXML
+    private AnchorPane redLinePane;
+    @FXML
+    private Line redLine;
+
+
     public void setTask(Task task) {
         String status = task.isCompleted() ? "✅ Completed" : "❌ Incomplete";
 

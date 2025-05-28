@@ -3,13 +3,10 @@ package controller;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import Util.FXMLUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,44 +16,21 @@ import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Pair;
 import model.User;
-import service.StudySessionService; // Thêm import cho service
+import service.StudySessionService; 
 
 public class GDChinhController {
 
-    @FXML private ImageView DashboardIcon;
-    @FXML private ImageView LogoutIcon;
-    @FXML private ImageView timeIcon;
-    @FXML private ImageView spaceIcon;
-    @FXML private ImageView avatarIcon;
-    @FXML private ImageView soundIcon, quoteIcon;
-    @FXML private MediaView mainVideo;
-    @FXML private ImageView taskIcon;
-    @FXML private ImageView calendarIcon;
-    @FXML private ImageView noteIcon;
-    
+    @FXML private ImageView DashboardIcon, LogoutIcon, timeIcon, spaceIcon, avatarIcon, soundIcon, quoteIcon, taskIcon, calendarIcon, noteIcon;
+    @FXML private MediaView mainVideo;   
     private User loggedInUser;
     private MediaPlayer mediaPlayer;
-    private StudySessionService studySessionService; // Thêm service
+    private StudySessionService studySessionService; 
     private Stage quotesStage;
 
     public void initialize() {
         // Khởi tạo service
         studySessionService = StudySessionService.getInstance();
-        
-        // Thiết lập cursor
-        DashboardIcon.setCursor(Cursor.HAND);
-        LogoutIcon.setCursor(Cursor.HAND);
-        timeIcon.setCursor(Cursor.HAND);
-        spaceIcon.setCursor(Cursor.HAND);
-        avatarIcon.setCursor(Cursor.HAND);
-        soundIcon.setCursor(Cursor.HAND);
-        quoteIcon.setCursor(Cursor.HAND);
-        taskIcon.setCursor(Cursor.HAND);
-        calendarIcon.setCursor(Cursor.HAND);
-        noteIcon.setCursor(Cursor.HAND);
-        
         // Bắt đầu tính thời gian học khi vào giao diện
         if (loggedInUser != null) {
             studySessionService.startStudySession(loggedInUser);
@@ -67,13 +41,11 @@ public class GDChinhController {
     public void handleDashboardClick(MouseEvent event) {
         try {
             // Kết thúc phiên học khi chuyển sang Dashboard
-            studySessionService.endStudySession();
-            
-            Pair<Parent, Object> pair = FXMLUtils.loadFXML("/fxml/Dashboard.fxml");
-            Parent root = pair.getKey();
-            DashboardController dashboardController = (DashboardController) pair.getValue();
+            studySessionService.endStudySession();         
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+            Parent root = loader.load();
+            DashboardController dashboardController = loader.getController();
             dashboardController.setLoggedInUser(this.loggedInUser);
-            
             Stage stage = (Stage) DashboardIcon.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -87,10 +59,9 @@ public class GDChinhController {
     public void handleLogoutClick(MouseEvent event) {
         try {
             // Kết thúc phiên học khi logout
-            studySessionService.endStudySession();
-            
-            Pair<Parent, Object> pair = FXMLUtils.loadFXML("/fxml/SignUp.fxml");
-            Parent root = pair.getKey();
+            studySessionService.endStudySession();           
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUp.fxml"));
+            Parent root = loader.load();
             Stage stage = (Stage) LogoutIcon.getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
@@ -102,12 +73,11 @@ public class GDChinhController {
     @FXML
     public void handleTimeClick(MouseEvent event) {
         try {
-            Pair<Parent, Object> pair = FXMLUtils.loadFXML("/fxml/Timer.fxml");
-            Parent root = pair.getKey();
-            Stage timerStage = new Stage();
-            timerStage.setTitle("Timer");
-            timerStage.setScene(new Scene(root));
-            timerStage.show();
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Timer.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -118,10 +88,8 @@ public class GDChinhController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Space.fxml"));
             Parent root = loader.load();
-
             spaceController controller = loader.getController();
             controller.setGDChinhController(this);
-
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
@@ -133,30 +101,22 @@ public class GDChinhController {
     @FXML
     public void handleQuotesClick(MouseEvent event) {
         try {
-            // Nếu đang hiển thị thì không làm gì cả (hoặc có thể toFront())
             if (quotesStage != null && quotesStage.isShowing()) {
                 return;
             }
-
-            Pair<Parent, Object> pair = FXMLUtils.loadFXML("/fxml/quotes.fxml");
-            Parent root = pair.getKey();
-            QuotesController quotesController = (QuotesController) pair.getValue();
-            
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/quotes.fxml"));
+            Parent root = loader.load(); 
+            QuotesController quotesController = loader.getController();          
             Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            
+            scene.setFill(Color.TRANSPARENT);         
             quotesStage = new Stage();
             quotesStage.initStyle(StageStyle.TRANSPARENT);
-            quotesStage.setScene(scene);
-            
+            quotesStage.setScene(scene);           
             // Truyền stage vào controller
-            quotesController.setStage(quotesStage);
-            
+            quotesController.setStage(quotesStage);            
             // Hiển thị ở vị trí chuột
             quotesStage.setX(event.getScreenX());
-            quotesStage.setY(event.getScreenY());
-            
-            // Quan trọng: Xử lý đóng cửa sổ
+            quotesStage.setY(event.getScreenY());          
             quotesStage.setOnCloseRequest(e -> {
                 quotesStage = null;
             });
@@ -200,8 +160,8 @@ public class GDChinhController {
     @FXML
     public void handleSoundClick() {
         try {
-            Pair<Parent, Object> pair = FXMLUtils.loadFXML("/fxml/sounds.fxml");
-            Parent root = pair.getKey();
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/sounds.fxml"));
+            Parent root = loader.load();
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
             stage.show();
@@ -257,11 +217,8 @@ public class GDChinhController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Task.fxml"));
             Parent root = loader.load();
-
-            // Lấy controller và truyền User
             TaskController taskController = loader.getController();
             taskController.setLoggedInUser(loggedInUser);
-
             Stage stage = new Stage();
             stage.setTitle("Task Manager");
             stage.setScene(new Scene(root));
@@ -275,13 +232,8 @@ public class GDChinhController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/calendar.fxml"));
             Parent root = loader.load();
-
-            // Lấy controller của Cal.fxml
             CalendarController calendarController = loader.getController();
-
-            // Truyền user đang đăng nhập vào CalendarController
             calendarController.setLoggedInUser(loggedInUser);
-
             Stage stage = new Stage();
             stage.setTitle("Calendar");
             stage.setScene(new Scene(root));
@@ -298,10 +250,8 @@ public class GDChinhController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Notes.fxml"));
             Parent root = loader.load();
-
             NoteController noteController = loader.getController();
             noteController.setLoggedInUser(loggedInUser); 
-
             Stage stage = new Stage();
             stage.setTitle("Notes");
             stage.setScene(new Scene(root));

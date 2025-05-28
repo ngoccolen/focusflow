@@ -1,16 +1,32 @@
 package controller;
 
+import javafx.scene.control.TextArea; // ✅ đúng
+import javafx.scene.control.Tooltip;
+
 import java.io.File;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+
+import org.hibernate.Session;
+
+import DAO.StudyTimeDAO;
+import Util.HibernateUtil;
+import model.Note;
+import model.StudyTime;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
 
-import DAO.StudyTimeDAO;
+import model.Task;                
+import org.hibernate.Session;     
+
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -23,68 +39,429 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-import model.StudyTime;
 import model.User;
-import service.StudySessionService;
 
 public class DashboardController {
-
-    // FXML Components
-    @FXML private ImageView GiaoDienChinhIcon;
-    @FXML private ImageView LogoutIcon;
-    @FXML private Label welcomeLabel;
-    @FXML private ImageView avatarIcon;
-    @FXML private GridPane calendarGrid;
-    @FXML private Label monthLabel;
-    @FXML private Label yearLabel;
-    @FXML private ImageView rightArrow;
-    @FXML private ImageView leftArrow;
-    @FXML private BarChart<String, Number> studyChart;
+	@FXML private ImageView GiaoDienChinhIcon;
+	@FXML private ImageView LogoutIcon;
+	@FXML private Label welcomeLabel;
+	@FXML private ImageView avatarIcon;
+	private User loggedInUser;
+	private Parent root;
+	@FXML private GridPane calendarGrid;
+	@FXML private Label monthLabel;
+	@FXML private Label yearLabel; 
+	@FXML private YearMonth currentYearMonth;
+	@FXML private ImageView rightArrow;
+	@FXML private ImageView leftArrow;
+	@FXML private AnchorPane noteContainer;
+	@FXML private TextArea noteText;
+	@FXML private Label DateLabel;
+	@FXML private Label taskLabel;
+	@FXML private ImageView taskIcon;
+	@FXML private BarChart<String, Number> studyChart;
     @FXML private CategoryAxis xAxis;
     @FXML private NumberAxis yAxis;
     @FXML private ComboBox<String> timeChoice;
+	@FXML
+	private VBox taskContainer;
+	@FXML private AnchorPane taskPane;
+	@FXML private AnchorPane timePane;
+	@FXML private Label monthLabel1;
+	@FXML private Label dayLabel;
 
-    // Application state
-    private YearMonth currentYearMonth;
-    private User loggedInUser;
-    private Parent root;
+    private LocalDate currentDate = LocalDate.now();
     private int daysToShow = 7;
     
-    // DAO instance
-    private final StudyTimeDAO studyTimeDAO = StudyTimeDAO.getInstance();
+    private StudyTimeDAO studyTimeDAO = StudyTimeDAO.getInstance();
+
+	public void setRoot(Parent root) {
+	    this.root = root;
+	}
+
+	public Parent getRoot() {
+	    return root;
+	}
+	public void initialize() {
+        if (currentYearMonth == null) {
+            currentYearMonth = YearMonth.now();
+        }
+        updateCalendar();
+        setupTimeChoiceComboBox();
+        setupChart();
+
+    }
+	public void handleGDChinhClick (MouseEvent event){
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GiaoDienChinh.fxml"));
+			Parent root = loader.load();
+		    GDChinhController gdchinhController = loader.getController();
+		    gdchinhController.setLoggedInUser(this.loggedInUser);
+			Stage stage = (Stage) GiaoDienChinhIcon.getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+            System.out.println("Cannot switch to Giao Dien Chinh");
+		}
+	}
+	public void handleLogoutClick (MouseEvent event) {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUp.fxml"));
+			Parent root = loader.load();
+			Stage stage = (Stage) LogoutIcon.getScene().getWindow();
+			stage.setScene(new Scene(root));
+			stage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		initialize();
+	}
+	public void setLoggedInUser(User user) {
+	    this.loggedInUser = user;
+	    updateWelcomeMessage();
+        updateAvatarImage();
+        loadChartData();
+	    setLatestNoteToDashboard();
+	    loadTasksForDashboard(loggedInUser);
+	      generateHourGrid();
+	        loadTasksForDay(currentDate);
+	        updateSelectedDateDisplay(currentDate);
+
+	}
+
+	private void updateWelcomeMessage() {
+        if (loggedInUser != null) {
+            welcomeLabel.setText("Hi! " + loggedInUser.getUsername() + ", welcome!");
+        }
+    }
+
+    private void updateAvatarImage() {
+        if (loggedInUser != null && loggedInUser.getAvatar() != null) {
+            File avatarFile = new File(loggedInUser.getAvatar());
+            if (avatarFile.exists()) {
+                avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
+            }
+        }
+    }
+	public void handleAvatarClick() {
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/hopTrangCaNhan.fxml"));
+			Parent root = loader.load();
+			AvatarController avatarController = loader.getController();
+			avatarController.setUsername(this.loggedInUser);
+			avatarController.setDashboardController(this);
+
+			Stage avatarStage = new Stage();
+			avatarStage.setScene(new Scene(root));
+			avatarStage.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		initialize();
+	}
+
+
+	public void updateCalendar() {
+	    // Xoá các label ngày cũ (giữ lại dòng tiêu đề nếu có)
+	    ObservableList<Node> children = calendarGrid.getChildren();
+	    children.removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
+
+	    LocalDate firstDayOfMonth = currentYearMonth.atDay(1);
+	    int daysInMonth = currentYearMonth.lengthOfMonth();
+	    int startDayOfWeek = firstDayOfMonth.getDayOfWeek().getValue();
+
+	    // Cập nhật tháng/năm trên giao diện
+	    monthLabel.setText(String.valueOf(currentYearMonth.getMonthValue()));
+	    yearLabel.setText(String.valueOf(currentYearMonth.getYear()));
+
+	    int col = (startDayOfWeek % 7);
+	    int row = 1;
+	    for (int day = 1; day <= daysInMonth; day++) {
+	        final LocalDate selectedDate = currentYearMonth.atDay(day); // final để dùng trong lambda
+
+	        Label dayLabel = new Label(String.valueOf(day));
+	        dayLabel.setCursor(Cursor.HAND);
+	        dayLabel.getStyleClass().add("calendar-day"); // 🔥 Thêm class riêng
+
+	        // Nếu là ngày hiện tại → tô màu nền
+	        if (selectedDate.equals(currentDate)) {
+	            dayLabel.setStyle("-fx-background-color: #a5d6a7; -fx-padding: 5px; -fx-font-size: 14px; -fx-background-radius: 5px;");
+	        } else {
+	            dayLabel.setStyle("-fx-padding: 5px; -fx-font-size: 14px; -fx-background-radius: 5px;");
+	        }
+
+	        dayLabel.setOnMouseClicked(e -> {
+	            // ✅ Chỉ reset style của các label là ngày
+	            for (Node node : calendarGrid.getChildren()) {
+	                if (node instanceof Label && node.getStyleClass().contains("calendar-day")) {
+	                    ((Label) node).setStyle("-fx-padding: 5px; -fx-font-size: 14px; -fx-background-radius: 5px;");
+	                }
+	            }
+
+	            currentDate = selectedDate;
+	            updateSelectedDateDisplay(currentDate);
+	            loadTasksForDay(currentDate);
+
+	            // Highlight label được chọn
+	            dayLabel.setStyle("-fx-background-color: #a5d6a7; -fx-padding: 5px; -fx-font-size: 14px; -fx-background-radius: 5px;");
+	        });
+
+	        calendarGrid.add(dayLabel, col, row);
+
+	        col++;
+	        if (col == 7) {
+	            col = 0;
+	            row++;
+	        }
+	    }
+	}
+
+	private void updateSelectedDateDisplay(LocalDate selectedDate) {
+	    dayLabel.setText(String.format("%02d", selectedDate.getDayOfMonth()));
+	    //monthLabel1.setText(String.format("%02d", selectedDate.getMonthValue()));
+	    monthLabel1.setText(
+	            selectedDate.getMonth().getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.ENGLISH)
+	        );
+	}
 
     @FXML
-    public void initialize() {
-        setupUIComponents();
-        setupChart();
-        setupTimeChoiceComboBox();
-        
-        currentYearMonth = YearMonth.now();
+    public void handleLeftClick() {
+        currentYearMonth = currentYearMonth.minusMonths(1);
         updateCalendar();
     }
 
-    private void setupUIComponents() {
-        // Set cursor for interactive elements
-        GiaoDienChinhIcon.setCursor(Cursor.HAND);
-        LogoutIcon.setCursor(Cursor.HAND);
-        avatarIcon.setCursor(Cursor.HAND);
-        rightArrow.setCursor(Cursor.HAND);
-        leftArrow.setCursor(Cursor.HAND);
+    @FXML
+    public void handleRightClick() {
+        currentYearMonth = currentYearMonth.plusMonths(1);
+        updateCalendar();
     }
 
+	private void setLatestNoteToDashboard() {
+	    Session session = HibernateUtil.getSessionFactory().openSession();
+
+	    Note latestNote = session.createQuery(
+	            "SELECT n FROM Note n LEFT JOIN FETCH n.task WHERE n.user_id = :userId ORDER BY n.created_at DESC",
+	            Note.class)
+	        .setParameter("userId", loggedInUser.getId())
+	        .setMaxResults(1)
+	        .uniqueResult();
+
+	    session.close();
+
+	    if (latestNote == null) {
+	        noteText.setText("Chưa có ghi chú nào.");
+	        taskLabel.setVisible(false);
+	        taskIcon.setVisible(false);
+	        DateLabel.setText("");
+	        return;
+	    }
+
+	    // Gán ngày
+	    if (latestNote.getCreatedAt() != null) {
+	        DateLabel.setText(latestNote.getCreatedAt().toLocalDate().toString());
+	    } else {
+	        DateLabel.setText("Unknown");
+	    }
+
+	    // Gán nội dung
+	    noteText.setText(latestNote.getContent());
+	    noteText.setEditable(false);
+
+	    // Gán task nếu có
+	    if (latestNote.getTask() != null) {
+	        taskLabel.setText(latestNote.getTask().getTitle());
+	        taskLabel.setVisible(true);
+	        taskIcon.setVisible(true);
+	    } else {
+	        taskLabel.setVisible(false);
+	        taskIcon.setVisible(false);
+	    }
+	}
+	private void loadTasksForDashboard(User user) {
+	    Session session = HibernateUtil.getSessionFactory().openSession();
+
+	    // Truy vấn tất cả Task của user (hoàn thành hoặc chưa hoàn thành)
+	    List<Task> tasks = session.createQuery(
+	        "FROM Task WHERE user_id = :userId ORDER BY deadline ASC", Task.class)
+	        .setParameter("userId", user.getId())
+	        .getResultList();
+
+	    session.close();
+
+	    taskContainer.getChildren().clear(); // Xóa các task cũ nếu có
+
+	    for (Task task : tasks) {
+	        try {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/taskDashboard.fxml"));
+	            AnchorPane taskPane = loader.load();
+
+	            TaskDashboardController controller = loader.getController();
+	            controller.setTask(task);
+
+	            taskContainer.getChildren().add(taskPane); // hiển thị lên giao diện
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+    private void loadTasksForDay(LocalDate date) {
+        if (loggedInUser == null) return;
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        List<Task> tasks = session.createQuery(
+            "FROM Task WHERE user_id = :userId AND date = :targetDate", Task.class)
+            .setParameter("userId", loggedInUser.getId())
+            .setParameter("targetDate", date)
+            .getResultList();
+        session.close();
+
+        taskPane.getChildren().removeIf(node -> !(node instanceof javafx.scene.shape.Line)); // xóa task cũ, giữ lại line
+
+
+     // Sắp xếp theo start_time
+        tasks.sort(Comparator.comparing(Task::getStart_time));
+
+        // Nhóm các task giao nhau
+        List<List<Task>> overlapGroups = groupOverlappingTasks(tasks);
+
+        for (List<Task> group : overlapGroups) {
+            int size = group.size();
+            for (int i = 0; i < size; i++) {
+                Task task = group.get(i);
+                try {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/calItem.fxml"));
+                    AnchorPane taskBlock = loader.load();
+
+                    CalItemController controller = loader.getController();
+                    controller.setTask(task);
+                  //  controller.setOnSelect(clickedTask -> openTaskWindowAndHighlight(clickedTask));
+
+                    // Vị trí theo thời gian
+                    int startMin = task.getStart_time().getHour() * 60 + task.getStart_time().getMinute();
+                    int endMin = task.getEnd_time() != null
+                            ? task.getEnd_time().getHour() * 60 + task.getEnd_time().getMinute()
+                            : startMin + 30;
+
+                    taskBlock.setLayoutY(startMin);
+                    taskBlock.setPrefHeight(endMin - startMin);
+
+                    // Dàn ngang theo group
+                    double widthPerTask = 240.0 / size;
+                    taskBlock.setLayoutX(i * widthPerTask + 5);
+                    taskBlock.setPrefWidth(widthPerTask - 10);
+
+                    taskPane.getChildren().add(taskBlock);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+     // 👉 Gọi vẽ line deadline sau khi vẽ xong calItem
+        loadDeadlineForDay(date);
+
+    }
+    private void loadDeadlineForDay(LocalDate date) {
+        if (loggedInUser == null) return;
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+
+        // Lấy tất cả task có deadline không null
+        List<Task> tasksWithDeadline = session.createQuery(
+            "FROM Task WHERE user_id = :userId AND deadline is not null", Task.class)
+            .setParameter("userId", loggedInUser.getId())
+            .getResultList();
+
+        session.close();
+
+        // Lọc những task có deadline trùng ngày đang xem
+        List<Task> matchingDeadlineTasks = tasksWithDeadline.stream()
+            .filter(task -> task.getDeadline().toLocalDate().equals(date))
+            .toList();
+
+        for (Task task : matchingDeadlineTasks) {
+            try {
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/deadlineDashboard.fxml"));
+                AnchorPane redLinePane = loader.load();
+
+                //RedlineController controller = loader.getController();
+                DeadlineDashboardController controller = loader.getController();
+
+                controller.setTask(task); // để set tooltip
+
+                int y = task.getDeadline().toLocalTime().getHour() * 60
+                        + task.getDeadline().toLocalTime().getMinute();
+
+                redLinePane.setLayoutY(y);
+                taskPane.getChildren().add(redLinePane);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void generateHourGrid() {
+        timePane.getChildren().clear();
+        taskPane.getChildren().clear();
+        taskPane.setPrefHeight(1440); // đủ cho 24h
+        for (int hour = 0; hour <= 23; hour++) {
+            Label hourLabel = new Label(String.format("%02d:00", hour));
+            hourLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #555;");
+            hourLabel.setLayoutY(hour * 60); // mỗi giờ = 60px
+            hourLabel.setLayoutX(5);
+            timePane.getChildren().add(hourLabel);
+            
+
+            // đường kẻ mỏng
+            javafx.scene.shape.Line line = new javafx.scene.shape.Line();
+            line.setStartX(0);
+            line.setStartY(hour * 60);
+            line.setEndX(250); // chiều dài taskPane
+            line.setEndY(hour * 60);
+            line.setStyle("-fx-stroke: #e0e0e0;");
+            taskPane.getChildren().add(line);
+        }
+    }
+    private boolean isOverlapping(Task a, Task b) {
+        return !(a.getEnd_time().isBefore(b.getStart_time()) || a.getStart_time().isAfter(b.getEnd_time()));
+    }
+    private List<List<Task>> groupOverlappingTasks(List<Task> tasks) {
+        List<List<Task>> groups = new ArrayList<>();
+
+        for (Task task : tasks) {
+            boolean added = false;
+            for (List<Task> group : groups) {
+                for (Task g : group) {
+                    if (isOverlapping(task, g)) {
+                        group.add(task);
+                        added = true;
+                        break;
+                    }
+                }
+                if (added) break;
+            }
+            if (!added) {
+                List<Task> newGroup = new ArrayList<>();
+                newGroup.add(task);
+                groups.add(newGroup);
+            }
+        }
+        return groups;
+    }
     private void setupChart() {
         studyChart.setLegendVisible(false);
         studyChart.setAnimated(false);
@@ -102,7 +479,6 @@ public class DashboardController {
         studyChart.setCategoryGap(5);
         studyChart.setBarGap(3); 
     }
-
     private void setupTimeChoiceComboBox() {
         timeChoice.getItems().addAll(
             "Last 7 days", 
@@ -115,7 +491,6 @@ public class DashboardController {
         
         timeChoice.setOnAction(e -> handleTimeChoiceSelection());
     }
-
     private void handleTimeChoiceSelection() {
         switch(timeChoice.getValue()) {
             case "Last 7 days": 
@@ -136,127 +511,6 @@ public class DashboardController {
         }
         loadChartData();
     }
-
-    public void setLoggedInUser(User user) {
-        this.loggedInUser = user;
-        updateWelcomeMessage();
-        updateAvatarImage();
-        loadChartData();
-    }
-
-    private void updateWelcomeMessage() {
-        if (loggedInUser != null) {
-            welcomeLabel.setText("Hi! " + loggedInUser.getUsername() + ", welcome!");
-        }
-    }
-
-    private void updateAvatarImage() {
-        if (loggedInUser != null && loggedInUser.getAvatar() != null) {
-            File avatarFile = new File(loggedInUser.getAvatar());
-            if (avatarFile.exists()) {
-                avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
-            }
-        }
-    }
-
-    @FXML
-    public void handleGDChinhClick(MouseEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GiaoDienChinh.fxml"));
-            Parent root = loader.load();
-            GDChinhController gdchinhController = loader.getController();
-            gdchinhController.setLoggedInUser(this.loggedInUser);
-            
-            Stage stage = (Stage) GiaoDienChinhIcon.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            showErrorAlert("Navigation Error", "Cannot switch to main interface: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    public void handleLogoutClick(MouseEvent event) {
-        try {
-            // Kết thúc phiên học nếu đang hoạt động
-            StudySessionService.getInstance().endStudySession();
-            
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUp.fxml"));
-            Parent root = loader.load();
-            Stage stage = (Stage) LogoutIcon.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (Exception e) {
-            showErrorAlert("Logout Error", "Failed to logout: " + e.getMessage());
-        }
-    }
-
-    @FXML
-    public void handleAvatarClick() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/hopTrangCaNhan.fxml"));
-            Parent root = loader.load();
-            AvatarController avatarController = loader.getController();
-            avatarController.setUsername(this.loggedInUser);
-            avatarController.setDashboardController(this);
-
-            Stage avatarStage = new Stage();
-            avatarStage.setScene(new Scene(root));
-            avatarStage.show();
-        } catch (Exception e) {
-            showErrorAlert("Profile Error", "Failed to open profile: " + e.getMessage());
-        }
-    }
-
-    public void updateAvatarImage(String avatarPath) {
-        if (avatarPath != null) {
-            File avatarFile = new File(avatarPath);
-            if (avatarFile.exists()) {
-                avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
-            }
-        }
-    }
-
-    public void updateCalendar() {
-        // Clear existing day labels
-        ObservableList<Node> children = calendarGrid.getChildren();
-        children.removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
-
-        LocalDate firstDayOfMonth = currentYearMonth.atDay(1);
-        int daysInMonth = currentYearMonth.lengthOfMonth();
-        int startDayOfWeek = firstDayOfMonth.getDayOfWeek().getValue();
-
-        // Update month and year labels
-        monthLabel.setText(String.valueOf(currentYearMonth.getMonthValue()));
-        yearLabel.setText(String.valueOf(currentYearMonth.getYear()));
-
-        // Add day labels to calendar grid
-        int col = (startDayOfWeek % 7);
-        int row = 1;
-
-        for (int day = 1; day <= daysInMonth; day++) {
-            Label dayLabel = new Label(String.valueOf(day));
-            calendarGrid.add(dayLabel, col, row);
-            col++;
-            if (col == 7) {
-                col = 0;
-                row++;
-            }
-        }
-    }
-
-    @FXML
-    public void handleLeftClick() {
-        currentYearMonth = currentYearMonth.minusMonths(1);
-        updateCalendar();
-    }
-
-    @FXML
-    public void handleRightClick() {
-        currentYearMonth = currentYearMonth.plusMonths(1);
-        updateCalendar();
-    }
-
     public void loadChartData() {
         if (loggedInUser == null) return;
 
@@ -324,20 +578,6 @@ public class DashboardController {
             }
         }
     }
-
-    private DateTimeFormatter getDateFormatterForRange() {
-        if (daysToShow <= 7) {
-            return DateTimeFormatter.ofPattern("EEE\ndd/MM");
-        } else if (daysToShow <= 14) {
-            return DateTimeFormatter.ofPattern("dd/MM");
-        } else if (daysToShow <= 30) {
-            return DateTimeFormatter.ofPattern("dd/MM");
-        } else {
-            return DateTimeFormatter.ofPattern("MM/yyyy");
-        }
-    }
-
-
     private void adjustXAxisForDataRange() {
         if (daysToShow > 30) {
             xAxis.setTickLabelRotation(90);
@@ -352,7 +592,17 @@ public class DashboardController {
         xAxis.setTickLabelGap(5);
         xAxis.setTickLength(5);
     }
-
+    private DateTimeFormatter getDateFormatterForRange() {
+        if (daysToShow <= 7) {
+            return DateTimeFormatter.ofPattern("EEE\ndd/MM");
+        } else if (daysToShow <= 14) {
+            return DateTimeFormatter.ofPattern("dd/MM");
+        } else if (daysToShow <= 30) {
+            return DateTimeFormatter.ofPattern("dd/MM");
+        } else {
+            return DateTimeFormatter.ofPattern("MM/yyyy");
+        }
+    }
     private void showCustomDateDialog() {
         Dialog<Pair<LocalDate, LocalDate>> dialog = new Dialog<>();
         dialog.setTitle("Select Date Range");
@@ -391,21 +641,6 @@ public class DashboardController {
             loadChartData();
         });
     }
+    
 
-    private void showErrorAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    // Getters and setters
-    public void setRoot(Parent root) {
-        this.root = root;
-    }
-
-    public Parent getRoot() {
-        return root;
-    }
 }

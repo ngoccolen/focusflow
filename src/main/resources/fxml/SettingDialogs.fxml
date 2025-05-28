@@ -1,36 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="159.0" prefWidth="412.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="412.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="32.0" layoutY="25.0" prefHeight="18.0" prefWidth="78.0" text="Pomodoro">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <Label layoutX="164.0" layoutY="25.0" prefHeight="18.0" prefWidth="87.0" text="Short Break">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <Label layoutX="313.0" layoutY="25.0" text="Long Break">
          <font>
-            <Font size="14.0" />
+            <Font name="System Bold" size="14.0" />
          </font>
       </Label>
       <TextField fx:id="pomodoroField" layoutX="28.0" layoutY="66.0" prefHeight="28.0" prefWidth="87.0" />
       <TextField fx:id="shortBreakField" layoutX="164.0" layoutY="66.0" prefHeight="28.0" prefWidth="87.0" />
       <TextField fx:id="longBreakField" layoutX="304.0" layoutY="66.0" prefHeight="28.0" prefWidth="87.0" />
-      <Button fx:id="saveButton" layoutX="176.0" layoutY="110.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="59.0" style="-fx-background-color: #FFE4E1;" text="Save">
+      <Button fx:id="saveButton" layoutX="176.0" layoutY="131.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="59.0" style="-fx-background-color: #FA8072;" text="Save" textFill="WHITE">
          <font>
             <Font name="System Bold" size="14.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
       </Button>
    </children>
 </AnchorPane>

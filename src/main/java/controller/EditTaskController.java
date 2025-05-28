@@ -15,21 +15,15 @@ import java.time.format.DateTimeFormatter;
 
 public class EditTaskController {
 
-    @FXML private TextField titleField;
-    @FXML private CheckBox completeCheckBox; // nếu không dùng, có thể bỏ
-    @FXML private DatePicker datePicker;
-    @FXML private TextField startTimeField;
-    @FXML private TextField endTimeField;
-    @FXML private DatePicker deadlineDatePicker;
-    @FXML private TextField deadlineTimeField;
+    @FXML private TextField titleField, startTimeField, endTimeField, deadlineTimeField;
+    @FXML private CheckBox completeCheckBox; 
+    @FXML private DatePicker datePicker, deadlineDatePicker;
     @FXML private Button saveButton;
-
     private Task task;
     private Runnable onSave;
 
     public void setTask(Task task) {
         this.task = task;
-
         if (task.getTitle() != null) titleField.setText(task.getTitle());
         if (task.getDate() != null) datePicker.setValue(task.getDate());
         if (task.getStart_time() != null) startTimeField.setText(task.getStart_time().toString());
@@ -53,7 +47,6 @@ public class EditTaskController {
         task.setTitle(titleField.getText());
         task.setDate(datePicker.getValue());
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
         try {
             if (!startTimeField.getText().isBlank()) {
                 task.setStart_time(LocalTime.parse(startTimeField.getText().trim(), timeFormatter));
@@ -62,7 +55,6 @@ public class EditTaskController {
             showAlert("Giờ bắt đầu không hợp lệ", "Vui lòng nhập đúng định dạng HH:mm");
             return;
         }
-
         try {
             if (!endTimeField.getText().isBlank()) {
                 task.setEnd_time(LocalTime.parse(endTimeField.getText().trim(), timeFormatter));
@@ -71,11 +63,9 @@ public class EditTaskController {
             showAlert("Giờ kết thúc không hợp lệ", "Vui lòng nhập đúng định dạng HH:mm");
             return;
         }
-
         try {
         	if (deadlineDatePicker.getValue() != null) {
         	    LocalDate deadlineDate = deadlineDatePicker.getValue();
-
         	    // Nếu người dùng có nhập giờ → dùng giờ đó
         	    if (deadlineTimeField != null && !deadlineTimeField.getText().isBlank()) {
         	        try {
@@ -97,7 +87,6 @@ public class EditTaskController {
             showAlert("Ngày deadline không hợp lệ", "Vui lòng chọn ngày");
             return;
         }
-
         // Nếu có checkbox hoàn thành
         if (completeCheckBox != null) {
             task.setCompleted(completeCheckBox.isSelected());
@@ -108,9 +97,7 @@ public class EditTaskController {
         session.merge(task);
         tx.commit();
         session.close();
-
         if (onSave != null) onSave.run();
-
         Stage stage = (Stage) saveButton.getScene().getWindow();
         stage.close();
     }

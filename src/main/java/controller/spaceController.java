@@ -295,7 +295,7 @@ public class spaceController {
         return videoFiles;
     }
 
-    private MediaView createMediaView(MediaPlayer mediaPlayer, String videoFileName) {
+    public MediaView createMediaView(MediaPlayer mediaPlayer, String videoFileName) {
         MediaView mediaView = new MediaView(mediaPlayer);
         mediaView.setPreserveRatio(true);
         Rectangle clip = new Rectangle(140, 100);

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="380.0" style="-fx-background-color: #98ccf5; -fx-background-radius: 5px;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.NoteItemController">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="179.0" prefWidth="400.0" style="-fx-background-color: #98ccf5; -fx-background-radius: 5px;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.NoteItemController">
    <children>
       <ImageView fitHeight="22.0" fitWidth="26.0" layoutX="1.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -29,7 +29,7 @@
             <Font name="Cambria" size="14.0" />
          </font>
       </Label>
-      <TextArea fx:id="noteText" layoutX="4.0" layoutY="29.0" prefHeight="145.0" prefWidth="371.0" style="-fx-background-color: #ffffff;" wrapText="true">
+      <TextArea fx:id="noteText" layoutX="4.0" layoutY="29.0" prefHeight="146.0" prefWidth="390.0" style="-fx-background-color: #ffffff;" wrapText="true">
          <font>
             <Font size="13.0" />
          </font></TextArea>

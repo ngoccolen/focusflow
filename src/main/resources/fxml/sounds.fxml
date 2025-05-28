@@ -31,7 +31,7 @@
          <cursor>
             <Cursor fx:constant="HAND" />
          </cursor></Slider>
-      <ImageView fx:id="previousIcon" fitHeight="22.0" fitWidth="25.0" layoutX="28.0" layoutY="218.0" onMouseClicked="#handlePreviousClick" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="22.0" fitWidth="25.0" layoutX="28.0" layoutY="218.0" onMouseClicked="#handlePreviousClick" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/icons8-rewind-50.png" />
          </image>
@@ -39,7 +39,7 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </ImageView>
-      <ImageView fx:id="nextIcon" fitHeight="22.0" fitWidth="25.0" layoutX="102.0" layoutY="218.0" onMouseClicked="#handleNextClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
+      <ImageView fitHeight="22.0" fitWidth="25.0" layoutX="102.0" layoutY="218.0" onMouseClicked="#handleNextClick" pickOnBounds="true" preserveRatio="true" rotate="180.0">
          <image>
             <Image url="@../images/icons8-rewind-50.png" />
          </image>

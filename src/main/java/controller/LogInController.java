@@ -5,12 +5,10 @@ import java.io.IOException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
-import Util.FXMLUtils;
 import Util.HibernateUtil;
 import Util.PasswordUtils;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -20,40 +18,29 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 import model.User;
 
 public class LogInController {
-	@FXML private TextField usernameField;
+	@FXML private TextField usernameField, visiblePasswordField;
 	@FXML private PasswordField passwordField;
 	@FXML private Button loginButton;
-	@FXML private TextField visiblePasswordField;
 	@FXML private ImageView eyeIcon, noEyeIcon;
-	private boolean isPasswordVisible = false;
 	@FXML private Label signUpLabel;
+	private boolean isPasswordVisible = false;
 	
-	public void hand() {
-		eyeIcon.setCursor(Cursor.HAND);
-		signUpLabel.setCursor(Cursor.HAND);
-		loginButton.setCursor(Cursor.HAND);
-	}
 	public void handleLogin() {
 	    String username = usernameField.getText();
 	    String password = passwordField.getText();
-
 	    if (username.isEmpty() || password.isEmpty()) {
 	        showAlert("Please fill in all fields");
 	        return;
 	    }
-
 	    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-	        // Truy vấn và giới hạn chỉ lấy 1 user
 	        Query<User> query = session.createQuery(
 	            "FROM User WHERE username = :username", User.class
 	        );
 	        query.setParameter("username", username);
 	        query.setMaxResults(1); // Giới hạn kết quả
-
 	        java.util.List<User> users = query.getResultList();
 
 	        if (users.isEmpty()) {
@@ -66,13 +53,12 @@ public class LogInController {
 	        if (PasswordUtils.verifyPassword(password, user.getPassword())) {
 	            showAlert("Login successful");
 	            try {
-	            	 Pair<Parent, DashboardController> dashboardPair = FXMLUtils.loadFXML("/fxml/Dashboard.fxml");
-	                 Parent dashboardRoot = dashboardPair.getKey();
-	                 DashboardController dashboardController = dashboardPair.getValue();
+	            	 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
+	                 Parent root = loader.load();
+	                 DashboardController dashboardController = loader.getController();
 	                 dashboardController.setLoggedInUser(user);
-
 	                 Stage stage = (Stage) loginButton.getScene().getWindow();
-	                 stage.setScene(new Scene(dashboardRoot));
+	                 stage.setScene(new Scene(root));
 	                 stage.show();
 	            } catch (IOException e) {
 	                e.printStackTrace();
@@ -91,20 +77,15 @@ public class LogInController {
 	    visiblePasswordField.textProperty().bindBidirectional(passwordField.textProperty());
 	    visiblePasswordField.setVisible(false);
 	    visiblePasswordField.setManaged(false);
-
 	    eyeIcon.setVisible(false);
 	    noEyeIcon.setVisible(true);
-
-	    hand();
 	}
 	public void togglePasswordVisibility() {
 	    isPasswordVisible = !isPasswordVisible;
-
 	    passwordField.setVisible(!isPasswordVisible);
 	    passwordField.setManaged(!isPasswordVisible);
 	    visiblePasswordField.setVisible(isPasswordVisible);
 	    visiblePasswordField.setManaged(isPasswordVisible);
-
 	    eyeIcon.setVisible(isPasswordVisible);     // icon con mắt hiện khi password hiện
 	    noEyeIcon.setVisible(!isPasswordVisible);  // icon gạch mắt hiện khi password ẩn
 	}
