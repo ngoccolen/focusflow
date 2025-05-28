@@ -21,17 +21,11 @@ import javafx.stage.Stage;
 import model.User;
 
 public class SignUpController {
-    @FXML private TextField usernameField;
+    @FXML private TextField usernameField, emailField;
     @FXML private PasswordField passwordField;
-    @FXML private TextField emailField;
     @FXML private Button createAccountBtn;
     @FXML private Label loginLabel;
     
-    public void initialize() {
-    	createAccountBtn.setCursor(Cursor.HAND);
-    	loginLabel.setCursor(Cursor.HAND);
-    }
-
     public void handleSignUp() {
         String username = usernameField.getText();
         String email = emailField.getText();

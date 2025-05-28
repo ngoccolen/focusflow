@@ -18,7 +18,6 @@ public class Note {
 
     private LocalDateTime created_at;
 
-    // Ghi chú có thể gắn với task hoặc không
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", nullable = true)
     private Task task;

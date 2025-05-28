@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.scene.input.MouseEvent;
 import model.Quote;
 
 import java.text.SimpleDateFormat;
@@ -15,9 +14,7 @@ import java.util.Random;
 
 public class QuotesController {
 
-    @FXML private Label quoteContent;
-    @FXML private Label quoteAuthor;
-    @FXML private Label quoteDate;
+    @FXML private Label quoteContent, quoteAuthor, quoteDate;
     @FXML private AnchorPane mainContainer;
     
     private Stage stage;
@@ -44,7 +41,7 @@ public class QuotesController {
         mainContainer.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
-            event.consume(); // Ngăn sự kiện lan ra các thành phần khác
+            event.consume(); 
         });
         
         mainContainer.setOnMouseDragged(event -> {

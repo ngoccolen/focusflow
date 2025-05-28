@@ -19,6 +19,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.control.ScrollPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1125.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
@@ -81,7 +82,7 @@
       </AnchorPane>
       <AnchorPane layoutX="802.0" layoutY="-1.0" prefHeight="757.0" prefWidth="322.0" style="-fx-background-color: #ffffff;">
          <children>
-            <ImageView fitHeight="334.0" fitWidth="318.0" layoutX="11.0" layoutY="-21.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="352.0" fitWidth="296.0" layoutX="11.0" layoutY="-21.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/schedule-icon-main.jpg" />
                </image>
@@ -89,6 +90,16 @@
             <Label layoutX="35.0" layoutY="45.0" prefHeight="22.0" prefWidth="117.0" text="Schedule">
                <font>
                   <Font name="Arial Black" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="monthLabel" layoutX="190.0" layoutY="48.0" prefHeight="18.0" prefWidth="18.0">
+               <font>
+                  <Font name="Arial Black" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="yearLabel" layoutX="215.0" layoutY="48.0" prefHeight="18.0" prefWidth="45.0">
+               <font>
+                  <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
             <HBox layoutX="35.0" layoutY="66.0" prefHeight="238.0" prefWidth="278.0">
@@ -107,6 +118,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -196,59 +208,36 @@
                   <Image url="@/images/triangle-icon-main.png" />
                </image>
             </ImageView>
-            <Label fx:id="yearLabel" layoutX="215.0" layoutY="48.0" prefHeight="18.0" prefWidth="45.0">
+            <Label layoutX="19.0" layoutY="370.0" text="Time">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="monthLabel" layoutX="190.0" layoutY="48.0" prefHeight="18.0" prefWidth="18.0">
+            <Label layoutX="81.0" layoutY="370.0" text="Day's timeline">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </Label>
-            <ListView layoutX="6.0" layoutY="415.0" prefHeight="302.0" prefWidth="310.0" />
-            <ComboBox layoutX="249.0" layoutY="384.0" prefHeight="26.0" prefWidth="60.0" promptText="All" style="-fx-background-color: #ffffff;" />
-            <Label layoutX="19.0" layoutY="389.0" text="Time">
-               <font>
-                  <Font name="Arial Black" size="12.0" />
-               </font>
-            </Label>
-            <Label layoutX="75.0" layoutY="389.0" text="Today's timeline">
-               <font>
-                  <Font name="Arial Black" size="12.0" />
-               </font>
-            </Label>
-            <Button layoutX="22.0" layoutY="313.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="230.0" style="-fx-background-color: #FA8072;" text="Add event" textFill="WHITE">
-               <font>
-                  <Font name="Arial Black" size="12.0" />
-               </font>
-            </Button>
-            <Button layoutX="22.0" layoutY="723.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="278.0" style="-fx-background-color: #FA8072;" text="View all details" textFill="WHITE">
-               <font>
-                  <Font name="Arial Black" size="12.0" />
-               </font>
-            </Button>
-            <ImageView fitHeight="22.0" fitWidth="22.0" layoutX="271.0" layoutY="315.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/reset-icon-main.png" />
-               </image>
-            </ImageView>
-            <Label layoutX="22.0" layoutY="352.0" prefHeight="24.0" prefWidth="74.0" text="January">
+            <Label fx:id="monthLabel1" layoutX="14.0" layoutY="328.0" prefHeight="24.0" prefWidth="74.0">
                <font>
                   <Font name="Arial Black" size="16.0" />
                </font>
             </Label>
-            <Label layoutX="107.0" layoutY="352.0" prefHeight="22.0" prefWidth="22.0" text="6">
+            <Label fx:id="dayLabel" layoutX="94.0" layoutY="328.0" prefHeight="22.0" prefWidth="22.0">
                <font>
                   <Font name="Arial Black" size="16.0" />
                </font>
             </Label>
-            <HBox layoutX="19.0" layoutY="422.0" prefHeight="289.0" prefWidth="296.0" style="-fx-background-color: #ffffff;">
-               <children>
-                  <Label prefHeight="38.0" prefWidth="45.0" text="8:00" />
-                  <Label prefHeight="38.0" prefWidth="250.0" text="Họp nhóm" />
-               </children>
-            </HBox>
+            <ScrollPane layoutX="8.0" layoutY="398.0" prefHeight="347.0" prefWidth="305.0" style="-fx-border-color: #ffffff; -fx-background-color: #ffffff;">
+               <content>
+                  <AnchorPane fx:id="mainSchedulePane" prefHeight="342.0" prefWidth="296.0">
+                     <children>
+                        <AnchorPane fx:id="timePane" layoutY="-6.0" prefHeight="347.0" prefWidth="66.0" />
+                        <AnchorPane fx:id="taskPane" layoutX="57.0" prefHeight="342.0" prefWidth="239.0" />
+                     </children>
+                  </AnchorPane>
+               </content>
+            </ScrollPane>
          </children></AnchorPane>
       <AnchorPane layoutX="102.0" layoutY="268.0" prefHeight="487.0" prefWidth="332.0">
          <children>
@@ -273,41 +262,53 @@
             <ComboBox fx:id="timeChoice" layoutX="210.0" layoutY="21.0" prefHeight="26.0" prefWidth="106.0" promptText="Week" style="-fx-background-color: #ffffff;" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="446.0" layoutY="465.0" prefHeight="263.0" prefWidth="347.0" style="-fx-background-color: #ffffff;">
-         <children>
-            <VBox layoutX="7.0" prefHeight="278.0" prefWidth="338.0" style="-fx-background-color: #ffffff;">
-               <children>
-                  <CheckBox mnemonicParsing="false" prefHeight="54.0" prefWidth="347.0" text="Học tiếng anh 30p" />
-                  <CheckBox layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="347.0" text="CheckBox" />
-                  <CheckBox layoutX="10.0" layoutY="64.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="347.0" text="CheckBox" />
-                  <CheckBox layoutX="10.0" layoutY="119.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="347.0" text="CheckBox" />
-                  <CheckBox layoutX="10.0" layoutY="173.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="347.0" text="CheckBox" />
-               </children>
-            </VBox>
-         </children></AnchorPane>
-      <AnchorPane layoutX="446.0" layoutY="288.0" prefHeight="142.0" prefWidth="347.0" style="-fx-background-color: #ffffff;">
-         <children>
-            <TextArea prefHeight="148.0" prefWidth="347.0" style="-fx-background-color: #ffffff;" text="Hi Hello nay chăm chỉ quá nha Quỳnh tổng, chào Ngọc chủ tịch nhaa Iu cả nhà" wrapText="true" />
-         </children></AnchorPane>
       <Label layoutX="446.0" layoutY="263.0" prefHeight="22.0" prefWidth="118.0" text="Notes">
          <font>
             <Font name="Arial Black" size="14.0" />
          </font>
       </Label>
-      <Label layoutX="446.0" layoutY="442.0" prefHeight="22.0" prefWidth="118.0" text="To do">
+      <AnchorPane fx:id="noteContainer" layoutX="448.0" layoutY="287.0">
+         <children>
+            <AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="142.0" prefWidth="347.0" style="-fx-background-color: #FA8072; -fx-background-radius: 5px;">
+               <children>
+                  <ImageView fitHeight="22.0" fitWidth="26.0" layoutX="1.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/icons8-calendar-24.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="DateLabel" layoutX="27.0" layoutY="3.0" prefHeight="22.0" prefWidth="102.0">
+                     <font>
+                        <Font name="Cambria Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <ImageView fx:id="taskIcon" fitHeight="22.0" fitWidth="26.0" layoutX="140.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/task-icon-main.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="taskLabel" layoutX="161.0" layoutY="3.0" prefHeight="22.0" prefWidth="174.0">
+                     <font>
+                        <Font name="Cambria" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextArea fx:id="noteText" layoutX="2.0" layoutY="25.0" prefHeight="115.0" prefWidth="342.0" style="-fx-background-color: #ffffff;" wrapText="true">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </TextArea>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+      <Label layoutX="446.0" layoutY="442.0" prefHeight="22.0" prefWidth="118.0" text="Task">
          <font>
             <Font name="Arial Black" size="14.0" />
          </font>
       </Label>
-      <ImageView fitHeight="22.0" fitWidth="28.0" layoutX="724.0" layoutY="442.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/plus-icon-main.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="22.0" fitWidth="28.0" layoutX="754.0" layoutY="442.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/minus-icon-main.png" />
-         </image>
-      </ImageView>
+      <ScrollPane fitToWidth="true" layoutX="441.0" layoutY="465.0" prefHeight="283.0" prefWidth="354.0" style="-fx-border-color: #ffffff; -fx-background-color: #ffffff;">
+         <content>
+            <VBox fx:id="taskContainer" style="-fx-background-color: #ffffff;" />
+         </content>
+      </ScrollPane>
    </children>
 </AnchorPane>

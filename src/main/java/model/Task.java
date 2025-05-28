@@ -129,5 +129,15 @@ public class Task {
         this.reminded = reminded;
     }
 
+    @Column(name = "remind_at")
+    private LocalDateTime remindAt;
+
+    public LocalDateTime getRemindAt() {
+        return remindAt;
+    }
+
+    public void setRemindAt(LocalDateTime remindAt) {
+        this.remindAt = remindAt;
+    }
 
 }

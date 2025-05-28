@@ -6,8 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -35,73 +35,49 @@ import java.util.concurrent.TimeUnit;
 
 public class TaskController {
 
-    @FXML
-    private Button addButton, removeButton;
-    @FXML
-    private DatePicker datePicker;
-    @FXML
-    private ImageView resetImage;
-    @FXML
-    private VBox taskContainer;
-
-
+    @FXML private Button addButton, removeButton;
+    @FXML private DatePicker datePicker;
+    @FXML private ImageView resetImage;
+    @FXML private VBox taskContainer;
     private Task selectedTask;
     private User loggedInUser;
-    @FXML
-    private void handleAddClick(javafx.scene.input.MouseEvent event) {
+    
+    public void handleAddClick(MouseEvent event) {
         addTask();
     }
     private final List<TaskItemController> taskItemControllers = new java.util.ArrayList<>();
-
-
     public void setLoggedInUser(User user) {
         this.loggedInUser = user;
-        loadTasks(null); // Bây giờ gọi mới hợp lý
-     // Lấy toàn bộ task từ DB để kiểm tra deadline
+        loadTasks(null); 
+        // Lấy toàn bộ task từ DB để kiểm tra deadline
         Session session = HibernateUtil.getSessionFactory().openSession();
         List<Task> allTasks = session.createQuery("FROM Task", Task.class).getResultList();
         session.close();
-
-        startDeadlineChecker(allTasks); // ✅ GỌI ở đây!
+        startDeadlineChecker(allTasks); 
     }
 
     @FXML
     public void initialize() {
-        addButton.setCursor(Cursor.HAND);
-        removeButton.setCursor(Cursor.HAND);
         datePicker.setOnAction(event -> loadTasks(datePicker.getValue()));
-//        resetImage.setOnMouseClicked(event -> {
-//            datePicker.setValue(null);
-//            loadTasks(null);
-//        });
-        resetImage.setCursor(Cursor.HAND);
-
     }
 
-
     private void addTask() {
-        if (loggedInUser == null) return; // Đảm bảo user đã đăng nhập
-
+        if (loggedInUser == null) return; 
         Task newTask = new Task();
         newTask.setTitle("New Task");
         newTask.setCreated_at(java.time.LocalDateTime.now());
-
         // Gán user_id dựa trên loggedInUser
         newTask.setUser_id(loggedInUser.getId());
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         session.save(newTask);
         tx.commit();
         session.close();
-
         loadTasks(datePicker.getValue());
     }
 
-
     public void removeTask(Task task) {
         if (task == null) return;
-
         Session session = HibernateUtil.getSessionFactory().openSession();
         Transaction tx = session.beginTransaction();
         session.remove(task);
@@ -110,22 +86,20 @@ public class TaskController {
 
         loadTasks(datePicker.getValue());
     }
-    @FXML
-    private void handleRemoveClick(javafx.scene.input.MouseEvent event) {
+    
+    public void handleRemoveClick(MouseEvent event) {
         if (selectedTask == null) {
             System.out.println("No task selected to remove.");
             return;
         }
-
         removeTask(selectedTask);
         selectedTask = null;
     }
-    @FXML
-    private void handleResetClick() {
-        datePicker.setValue(null);     // ✅ Xoá lọc theo ngày
-        loadTasks(null);               // ✅ Load toàn bộ task
+    
+    public void handleResetClick() {
+        datePicker.setValue(null);     
+        loadTasks(null);              
     }
-
 
     public void loadTasks(LocalDate filterDate) {
         taskContainer.getChildren().clear();
@@ -139,16 +113,14 @@ public class TaskController {
                     .collect(Collectors.toList());
         }
 
-        //tasks.sort(Comparator.comparing(Task::getStart_time, Comparator.nullsLast(Comparator.reverseOrder())));
         tasks.sort(
         	    Comparator
-        	        // Ưu tiên task chưa hoàn thành (false < true)
         	        .comparing(Task::isCompleted)
         	        // Sau đó sắp xếp theo start_time tăng dần, null xuống dưới
         	        .thenComparing(Task::getStart_time, Comparator.nullsLast(Comparator.naturalOrder()))
         	);
 
-    taskItemControllers.clear(); // reset trước mỗi lần load
+       taskItemControllers.clear(); 
 
     for (Task task : tasks) {
         try {
@@ -160,29 +132,25 @@ public class TaskController {
             itemController.setOnEdit(this::editTask);
             itemController.setOnSelect(() -> {
                 selectedTask = task;
-
                 // Reset tất cả taskItem về trạng thái bình thường
                 for (TaskItemController c : taskItemControllers) {
                     c.setSelected(false);
                 }
-
                 // Highlight task được chọn
                 itemController.setSelected(true);
             });
             taskNode.setUserData(loader);
-            taskItemControllers.add(itemController); // lưu lại để reset sau
+            taskItemControllers.add(itemController);
             taskContainer.getChildren().add(taskNode);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }}
 
-
     private void editTask(Task task) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/taskEdit.fxml")); // đường dẫn FXML
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/taskEdit.fxml")); 
             Parent root = loader.load();
-
             EditTaskController controller = loader.getController();
             controller.setTask(task);
             controller.setOnSave(() -> {
@@ -199,54 +167,17 @@ public class TaskController {
             e.printStackTrace();
         }
     }
-//    public void setHighlightedTask(Task taskToHighlight) {
-//        Platform.runLater(() -> {
-//            loadTasks(null); // đảm bảo hiển thị lại
-//            for (Node node : taskContainer.getChildren()) {
-//                FXMLLoader loader = (FXMLLoader) node.getUserData();
-//                TaskItemController item = loader.getController();
-//                if (item.getTask().getTask_id() == taskToHighlight.getTask_id()) {
-//                    item.highlight();
-//                }
-//
-//            }
-//        });
-//    }
-//    public void setHighlightedTask(Task taskToHighlight) {
-//        Platform.runLater(() -> {
-//            if (taskToHighlight.getDate() != null) {
-//                datePicker.setValue(taskToHighlight.getDate());
-//                loadTasks(taskToHighlight.getDate());
-//            } else {
-//                loadTasks(null);
-//            }
-//
-//            Platform.runLater(() -> {
-//                for (Node node : taskContainer.getChildren()) {
-//                    FXMLLoader loader = (FXMLLoader) node.getUserData();
-//                    if (loader != null) {
-//                        TaskItemController item = loader.getController();
-//                        if (item.getTask().getTask_id() == taskToHighlight.getTask_id()) {
-//                            item.highlight();
-//                            break;
-//                        }
-//                    }
-//                }
-//            });
-//        });
-//    }
+    
     public void setHighlightedTask(Task taskToHighlight) {
         Platform.runLater(() -> {
-            datePicker.setValue(null);      // ❗ reset bộ lọc ngày
-            loadTasks(null);                // ✅ load toàn bộ task
+            datePicker.setValue(null);      
+            loadTasks(null);               
 
             Platform.runLater(() -> {
                 for (TaskItemController c : taskItemControllers) {
                     Task t = c.getTask();
-
                     // Reset style tất cả task về mặc định
                     c.setSelected(false);
-
                     // Nếu là task cần highlight → set màu nổi bật
                     if (t.getTask_id() == taskToHighlight.getTask_id()) {
                         c.setSelected(true); // highlight bằng màu, border
@@ -260,19 +191,18 @@ public class TaskController {
         LocalDateTime now = LocalDateTime.now();
 
         for (Task task : tasks) {
-            if (task.getDeadline() != null && !task.isCompleted() && !task.isReminded()) {
-                long minutesUntilDeadline = Duration.between(now, task.getDeadline()).toMinutes();
+            if (task.isCompleted() || task.isReminded()) continue;
 
-                if (minutesUntilDeadline >= 0 && minutesUntilDeadline <= 10) {
-                    showDeadlinePopup(task);         // ⏰ Hiện popup
-                    task.setReminded(true);          // ✅ Đánh dấu đã nhắc
-
-                    // Cập nhật vào CSDL
-                    try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-                        Transaction tx = session.beginTransaction();
-                        session.merge(task);         // lưu cờ đã nhắc
-                        tx.commit();
-                    }
+            // Nếu người dùng chọn remind_at → dùng cái đó
+            if (task.getRemindAt() != null) {
+                long mins = Duration.between(now, task.getRemindAt()).toMinutes();
+                if (mins >= 0 && mins <= 1) {
+                    showDeadlinePopup(task);
+                }
+            } else if (task.getDeadline() != null) {
+                long mins = Duration.between(now, task.getDeadline()).toMinutes();
+                if (mins >= 0 && mins <= 10) {
+                    showDeadlinePopup(task);
                 }
             }
         }
@@ -280,11 +210,29 @@ public class TaskController {
 
     private void showDeadlinePopup(Task task) {
         Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("⏰ Deadline Reminder");
-            alert.setHeaderText("Task deadline coming soon!");
-            alert.setContentText("Task \"" + task.getTitle() + "\" is due in less than 10 minutes!");
-            alert.show();
+            alert.setHeaderText("Task \"" + task.getTitle() + "\" is due soon!");
+            alert.setContentText("Do you want to be reminded again later?");
+
+            ButtonType remindLater = new ButtonType("Remind me later");
+            ButtonType dismiss = new ButtonType("Dismiss", ButtonBar.ButtonData.CANCEL_CLOSE);
+            alert.getButtonTypes().setAll(remindLater, dismiss);
+
+            alert.showAndWait().ifPresent(response -> {
+                if (response == remindLater) {
+                    task.setRemindAt(LocalDateTime.now().plusMinutes(10));
+                    task.setReminded(false); 
+                } else {
+                    task.setReminded(true); 
+                }
+
+                try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                    Transaction tx = session.beginTransaction();
+                    session.merge(task);
+                    tx.commit();
+                }
+            });
         });
     }
     private ScheduledExecutorService scheduler;
