@@ -133,7 +133,7 @@ public class DashboardController {
 	public void setLoggedInUser(User user) {
 	    this.loggedInUser = user;
 	    updateWelcomeMessage();
-        updateAvatarImage();
+        updateAvatarImage(user.getAvatar());
         loadChartData();
 	    setLatestNoteToDashboard();
 	    loadTasksForDashboard(loggedInUser);
@@ -149,14 +149,14 @@ public class DashboardController {
         }
     }
 
-    private void updateAvatarImage() {
-        if (loggedInUser != null && loggedInUser.getAvatar() != null) {
-            File avatarFile = new File(loggedInUser.getAvatar());
-            if (avatarFile.exists()) {
-                avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
-            }
-        }
-    }
+	public void updateAvatarImage(String path) {
+	    if (path != null) {
+	        File avatarFile = new File(path);
+	        if (avatarFile.exists()) {
+	            avatarIcon.setImage(new Image(avatarFile.toURI().toString()));
+	        }
+	    }
+	}
 	public void handleAvatarClick() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/hopTrangCaNhan.fxml"));
