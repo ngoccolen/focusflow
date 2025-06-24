@@ -21,7 +21,7 @@ import service.StudySessionService;
 
 public class GDChinhController {
 
-    @FXML private ImageView DashboardIcon, LogoutIcon, timeIcon, spaceIcon, avatarIcon, soundIcon, quoteIcon, taskIcon, calendarIcon, noteIcon;
+    @FXML private ImageView DashboardIcon, LogoutIcon, timeIcon, spaceIcon, avatarIcon, soundIcon, quoteIcon, taskIcon, calendarIcon, noteIcon, communityIcon;
     @FXML private MediaView mainVideo;   
     private User loggedInUser;
     private MediaPlayer mediaPlayer;
@@ -54,6 +54,22 @@ public class GDChinhController {
             System.out.println("Cannot switch to Dashboard");
         }
     }
+    public void handleCommunityClick(MouseEvent event) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Community.fxml"));
+	        Parent root = loader.load();
+	        
+	        CommunityController communityController = loader.getController();
+	        communityController.setLoggedInUser(this.loggedInUser);
+	        
+	        Stage stage = (Stage) communityIcon.getScene().getWindow();
+	        stage.setScene(new Scene(root));
+	        stage.show();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("Cannot switch to Community screen");
+	    }
+	}
 
     @FXML
     public void handleLogoutClick(MouseEvent event) {

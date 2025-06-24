@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="313.0" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MessItemController">
+   <children>
+      <ImageView fx:id="FriendAvatar" fitHeight="49.0" fitWidth="54.0" layoutX="12.0" layoutY="7.0" pickOnBounds="true" preserveRatio="true">
+      </ImageView>
+      <Label fx:id="FriendName" layoutX="71.0" layoutY="14.0" prefHeight="20.0" prefWidth="190.0">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="SendTime" layoutX="251.0" layoutY="14.0" prefHeight="19.0" prefWidth="54.0" textFill="#848484">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="SenderLabel" layoutX="71.0" layoutY="38.0" prefHeight="19.0" prefWidth="42.0" textFill="#848484">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="messContent" layoutX="122.0" layoutY="38.0" prefHeight="19.0" prefWidth="184.0" textFill="#848484">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

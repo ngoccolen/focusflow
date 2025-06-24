@@ -1,10 +1,14 @@
 package controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Random;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
+import Util.EmailUtil;
 import Util.HibernateUtil;
 import Util.PasswordUtils;
 import javafx.fxml.FXML;
@@ -17,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import model.User;
 
@@ -27,6 +32,22 @@ public class LogInController {
 	@FXML private ImageView eyeIcon, noEyeIcon;
 	@FXML private Label signUpLabel;
 	private boolean isPasswordVisible = false;
+	private String currentOTP;
+	private String currentEmail;
+    private LocalDateTime otpExpirationTime;
+
+	
+	public interface LoginCallback {
+        void onSuccess(String username);
+    }
+
+    private LoginCallback loginCallback;
+
+    // Thêm setter cho callback
+    public void setOnLoginSuccess(LoginCallback callback) {
+        this.loginCallback = callback;
+    }
+
 	
 	public void handleLogin() {
 	    String username = usernameField.getText();
@@ -52,6 +73,9 @@ public class LogInController {
 
 	        if (PasswordUtils.verifyPassword(password, user.getPassword())) {
 	            showAlert("Login successful");
+	            if (loginCallback != null) {
+	                loginCallback.onSuccess(username); // Truyền username về Main
+	            }
 	            try {
 	            	 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
 	                 Parent root = loader.load();
@@ -99,10 +123,104 @@ public class LogInController {
             showAlert("Failed to load signup view.");
 		}
 	}
-	private void showAlert(String message) {
+	public void showAlert(String message) {
 		// TODO Auto-generated method stub
 		 Alert alert = new Alert(Alert.AlertType.INFORMATION);
 	     alert.setContentText(message);
 	     alert.showAndWait();
 	}
+	  @FXML
+	    public void handleForgotPasswordClick() {
+	        try {
+	            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/forgotPassword.fxml"));
+	            Parent root = loader.load();
+	            
+	            // Lấy controller của forgotPassword
+	            ForgotPasswordController forgotPasswordController = loader.getController();
+	            forgotPasswordController.setParentController(this);
+	            
+	            Stage stage = new Stage();
+	            stage.initModality(Modality.APPLICATION_MODAL);
+	            stage.setTitle("Forgot Password");
+	            stage.setScene(new Scene(root));
+	            stage.showAndWait();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            showAlert("Failed to open forgot password window.");
+	        }
+	    }
+	  public boolean sendOTP(String email) {
+	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	            // Kiểm tra email có tồn tại
+	            Query<User> query = session.createQuery("FROM User WHERE email = :email", User.class);
+	            query.setParameter("email", email);
+	            query.setMaxResults(1);
+	            List<User> users = query.getResultList();
+
+	            if (users.isEmpty()) {
+	                showAlert("Email not found in our system.");
+	                return false;
+	            }
+
+	            // Tạo OTP 6 chữ số
+	            Random random = new Random();
+	            currentOTP = String.format("%06d", random.nextInt(999999));
+	            currentEmail = email;
+	            otpExpirationTime = LocalDateTime.now().plusMinutes(5); // OTP hết hạn sau 5 phút
+
+	            // Gửi email
+	            String subject = "Password Reset OTP";
+	            String content = "Your OTP is: " + currentOTP + "\nExpires in 5 minutes.";
+	            
+	            if (EmailUtil.sendEmail(email, subject, content)) {
+	                showAlert("OTP sent to your email!");
+	                return true;
+	            } else {
+	                showAlert("Failed to send OTP. Please try again.");
+	                return false;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            showAlert("Error: " + e.getMessage());
+	            return false;
+	        }
+	    }
+	    
+	  public boolean verifyOTP(String enteredOTP) {
+	        if (LocalDateTime.now().isAfter(otpExpirationTime)) {
+	            showAlert("OTP has expired. Please request a new one.");
+	            return false;
+	        }
+	        return enteredOTP.equals(currentOTP);
+	    }
+
+	    public boolean updatePassword(String newPassword) {
+	        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+	            session.beginTransaction();
+	            
+	            Query<User> query = session.createQuery("FROM User WHERE email = :email", User.class);
+	            query.setParameter("email", currentEmail);
+	            User user = query.uniqueResult();
+	            
+	            if (user != null) {
+	                user.setPassword(PasswordUtils.hashPassword(newPassword));
+	                session.update(user);
+	                session.getTransaction().commit();
+	                return true;
+	            }
+	            return false;
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            showAlert("Error updating password: " + e.getMessage());
+	            return false;
+	        }
+	    }
+	    
+	    public boolean resendOTP() {
+	        if (currentEmail == null) return false;
+	        return sendOTP(currentEmail);
+	    }
+
+
+	
 }

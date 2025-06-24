@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane prefHeight="77.0" prefWidth="122.0" style="-fx-padding: 5; -fx-background-color: #d9f6ff;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TextBubbleLeftController">
+
+   <children>
+      <HBox alignment="TOP_LEFT" layoutX="10.0" layoutY="9.0" prefHeight="31.0" prefWidth="30.0" spacing="8">
+         <!-- Avatar -->
+         <ImageView fx:id="avatarImage" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true" />
+      </HBox>
+
+      <!-- Chat bubble -->
+      <AnchorPane fx:id="chatBox" layoutX="58.0" layoutY="9.0" maxWidth="400.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10px;">
+         <children>
+            <VBox spacing="4.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="6.0">
+               <!-- Sender Name -->
+               <Label fx:id="senderName" style="-fx-font-weight: bold;" text="Sender" wrapText="true" />
+
+               <!-- Message Content -->
+               <Label fx:id="messageContent" style="-fx-font-size: 13px;" wrapText="true" />
+            </VBox>
+
+            <!-- Timestamp (cố định dưới cùng bên phải) -->
+            <Label fx:id="timestamp" style="-fx-font-size: 10px; -fx-text-fill: #999;" text="08:20 SA" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="8.0" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

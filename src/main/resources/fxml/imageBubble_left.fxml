@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane style="-fx-padding: 5; -fx-background-color: #d9f6ff;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ImageBubbleLeftController">
+
+   <children>
+      <HBox alignment="TOP_LEFT" layoutX="8.0" layoutY="7.0" prefHeight="52.0" prefWidth="270.0" spacing="8">
+         <!-- Avatar -->
+         <ImageView fx:id="avatarImage" fitHeight="40.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true" />
+
+         <!-- Chat bubble -->
+         <AnchorPane fx:id="chatBox" maxWidth="400.0" style="-fx-background-color: #ffffff; -fx-background-radius: 10px;">
+            <children>
+               <VBox spacing="4.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="8.0" AnchorPane.topAnchor="6.0">
+                  <!-- Sender Name -->
+                  <Label fx:id="senderName" style="-fx-font-weight: bold;" wrapText="true" />
+
+                  <!-- Image Content -->
+                  <ImageView fx:id="imageContent" fitWidth="200" pickOnBounds="true" preserveRatio="true" />
+               </VBox>
+
+               <!-- Timestamp -->
+               <Label fx:id="timestamp" style="-fx-font-size: 10px; -fx-text-fill: #999;" AnchorPane.bottomAnchor="4.0" AnchorPane.rightAnchor="8.0" />
+            </children>
+         </AnchorPane>
+      </HBox>
+   </children>
+</AnchorPane>

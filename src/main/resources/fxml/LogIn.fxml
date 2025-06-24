@@ -36,7 +36,7 @@
       <TextField fx:id="usernameField" layoutX="426.0" layoutY="120.0" prefHeight="32.0" prefWidth="266.0" />
       <PasswordField fx:id="passwordField" layoutX="426.0" layoutY="200.0" prefHeight="32.0" prefWidth="266.0" />
       <TextField fx:id="visiblePasswordField" layoutX="426.0" layoutY="200.0" managed="false" prefHeight="32.0" prefWidth="266.0" visible="false" />
-      <Button fx:id="loginButton" layoutX="391.0" layoutY="282.0" mnemonicParsing="false" onMouseClicked="#handleLogin" prefHeight="32.0" prefWidth="302.0" style="-fx-background-color: #FA8072;" text="Log In" textFill="WHITE">
+      <Button fx:id="loginButton" layoutX="392.0" layoutY="262.0" mnemonicParsing="false" onMouseClicked="#handleLogin" prefHeight="32.0" prefWidth="302.0" style="-fx-background-color: #FA8072;" text="Log In" textFill="WHITE">
          <font>
             <Font name="System Bold" size="15.0" />
          </font>
@@ -44,11 +44,11 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </Button>
-      <Label layoutX="412.0" layoutY="350.0" text="Don't have an account?">
+      <Label layoutX="413.0" layoutY="360.0" text="Don't have an account?">
          <font>
             <Font size="14.0" />
          </font></Label>
-      <Label fx:id="signUpLabel" layoutX="569.0" layoutY="350.0" onMouseClicked="#handleSignUpClick" text="Sign Up here" textFill="#100e8c" underline="true">
+      <Label fx:id="signUpLabel" layoutX="570.0" layoutY="360.0" onMouseClicked="#handleSignUpClick" text="Sign Up here" textFill="#100e8c" underline="true">
          <font>
             <Font size="14.0" />
          </font>
@@ -87,5 +87,11 @@
             </ImageView>
          </children>
       </StackPane>
+      <Label layoutX="589.0" layoutY="320.0" />
+      <Label fx:id="forgotPasswordLabel" layoutX="577.0" layoutY="317.0" prefHeight="22.0" prefWidth="119.0" text="Forgot Password?" textFill="GOLD" underline="true" onMouseClicked="#handleForgotPasswordClick">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

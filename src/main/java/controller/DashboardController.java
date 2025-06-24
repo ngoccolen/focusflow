@@ -82,6 +82,8 @@ public class DashboardController {
 	@FXML private AnchorPane timePane;
 	@FXML private Label monthLabel1;
 	@FXML private Label dayLabel;
+	@FXML
+	private ImageView communityIcon;
 
     private LocalDate currentDate = LocalDate.now();
     private int daysToShow = 7;
@@ -129,6 +131,22 @@ public class DashboardController {
 			e.printStackTrace();
 		}
 		initialize();
+	}
+	public void handleCommunityClick(MouseEvent event) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Community.fxml"));
+	        Parent root = loader.load();
+	        
+	        CommunityController communityController = loader.getController();
+	        communityController.setLoggedInUser(this.loggedInUser);
+	        
+	        Stage stage = (Stage) communityIcon.getScene().getWindow();
+	        stage.setScene(new Scene(root));
+	        stage.show();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("Cannot switch to Community screen");
+	    }
 	}
 	public void setLoggedInUser(User user) {
 	    this.loggedInUser = user;

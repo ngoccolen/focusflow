@@ -46,6 +46,11 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+             <ImageView fx:id="communityIcon" fitHeight="45.0" fitWidth="52.0" layoutX="21.0" layoutY="258.0" onMouseClicked="#handleCommunityClick" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/community.png" />
+               </image>
+            </ImageView>
          </children>
       </AnchorPane>
       <MediaView fx:id="mainVideo" fitHeight="850.0" fitWidth="1450.0" layoutX="86.0" />
