@@ -54,9 +54,4 @@ CREATE TABLE note (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (task_id) REFERENCES task(task_id) ON DELETE SET NULL
 );
-ALTER TABLE task ADD COLUMN remind_at DATETIME NULL;
-CREATE TABLE study_time (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    user_id INT NOT NULL,
-    study_date DATE NOT NULL,
-    hours DECIMAL(10, 8) NOT NULL);
+

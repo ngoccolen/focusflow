@@ -14,5 +14,13 @@
         <mapping class="model.Quote"/>
         <mapping class="model.Note"/>
         <mapping class="model.Task"/>
+                <mapping class="model.ChatConversation"/>
+                <mapping class="model.ChatMember"/>
+                <mapping class="model.ChatMemberId"/>
+                <mapping class="model.Message"/>
+                <mapping class="model.Friendship"/>
+                                <mapping class="model.ChatMessage"/>
+               
+        
     </session-factory>
 </hibernate-configuration>

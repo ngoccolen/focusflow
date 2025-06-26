@@ -6,11 +6,13 @@ import javafx.scene.control.Tooltip;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import DAO.StudyTimeDAO;
 import Util.HibernateUtil;
@@ -39,6 +41,7 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -82,7 +85,10 @@ public class DashboardController {
 	@FXML private AnchorPane timePane;
 	@FXML private Label monthLabel1;
 	@FXML private Label dayLabel;
-
+	@FXML
+	private ImageView communityIcon;
+	private Note latestNote;
+@FXML private Button saveButton;
     private LocalDate currentDate = LocalDate.now();
     private int daysToShow = 7;
     
@@ -129,6 +135,22 @@ public class DashboardController {
 			e.printStackTrace();
 		}
 		initialize();
+	}
+	public void handleCommunityClick(MouseEvent event) {
+	    try {
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Community.fxml"));
+	        Parent root = loader.load();
+	        
+	        CommunityController communityController = loader.getController();
+	        communityController.setLoggedInUser(this.loggedInUser);
+	        
+	        Stage stage = (Stage) communityIcon.getScene().getWindow();
+	        stage.setScene(new Scene(root));
+	        stage.show();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        System.out.println("Cannot switch to Community screen");
+	    }
 	}
 	public void setLoggedInUser(User user) {
 	    this.loggedInUser = user;
@@ -250,51 +272,87 @@ public class DashboardController {
         updateCalendar();
     }
 
-	private void setLatestNoteToDashboard() {
-	    Session session = HibernateUtil.getSessionFactory().openSession();
+    private void setLatestNoteToDashboard() {
+        Session session = HibernateUtil.getSessionFactory().openSession();
 
-	    Note latestNote = session.createQuery(
-	            "SELECT n FROM Note n LEFT JOIN FETCH n.task WHERE n.user_id = :userId ORDER BY n.created_at DESC",
-	            Note.class)
-	        .setParameter("userId", loggedInUser.getId())
-	        .setMaxResults(1)
-	        .uniqueResult();
+        latestNote = session.createQuery(
+                "SELECT n FROM Note n LEFT JOIN FETCH n.task WHERE n.user_id = :userId ORDER BY n.created_at DESC",
+                Note.class)
+            .setParameter("userId", loggedInUser.getId())
+            .setMaxResults(1)
+            .uniqueResult();
 
-	    session.close();
+        session.close();
 
-	    if (latestNote == null) {
-	        noteText.setText("Chưa có ghi chú nào.");
-	        taskLabel.setVisible(false);
-	        taskIcon.setVisible(false);
-	        DateLabel.setText("");
-	        return;
-	    }
+        if (latestNote == null) {
+            noteText.setText("Chưa có ghi chú nào.");
+            taskLabel.setVisible(false);
+            taskIcon.setVisible(false);
+            DateLabel.setText("");
+            return;
+        }
 
-	    // Gán ngày
-	    if (latestNote.getCreatedAt() != null) {
-	        DateLabel.setText(latestNote.getCreatedAt().toLocalDate().toString());
-	    } else {
-	        DateLabel.setText("Unknown");
-	    }
+        if (latestNote.getCreatedAt() != null) {
+            DateLabel.setText(latestNote.getCreatedAt().toLocalDate().toString());
+        } else {
+            DateLabel.setText("Unknown");
+        }
 
-	    // Gán nội dung
-	    noteText.setText(latestNote.getContent());
-	    noteText.setEditable(false);
+        noteText.setText(latestNote.getContent());
+        noteText.setEditable(true); 
 
-	    // Gán task nếu có
-	    if (latestNote.getTask() != null) {
-	        taskLabel.setText(latestNote.getTask().getTitle());
-	        taskLabel.setVisible(true);
-	        taskIcon.setVisible(true);
-	    } else {
-	        taskLabel.setVisible(false);
-	        taskIcon.setVisible(false);
-	    }
-	}
+        if (latestNote.getTask() != null) {
+            taskLabel.setText(latestNote.getTask().getTitle());
+            taskLabel.setVisible(true);
+            taskIcon.setVisible(true);
+        } else {
+            taskLabel.setVisible(false);
+            taskIcon.setVisible(false);
+        }
+    }
+
+    @FXML
+    private void saveNote() {
+        String newContent = noteText.getText().trim();
+        if (newContent.isEmpty()) {
+            System.out.println("Nội dung ghi chú trống.");
+            return;
+        }
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction tx = null;
+
+        try {
+            tx = session.beginTransaction();
+
+            if (latestNote == null) {
+                latestNote = new Note();
+                latestNote.setUserId(loggedInUser.getId());
+                latestNote.setContent(newContent);
+                latestNote.setCreatedAt(LocalDateTime.now());
+                session.persist(latestNote);
+                System.out.println("Đã tạo ghi chú mới.");
+            } else {
+                latestNote.setContent(newContent);
+                latestNote.setCreatedAt(LocalDateTime.now());
+                session.merge(latestNote);
+                System.out.println("Đã cập nhật ghi chú.");
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx != null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
+        noteText.setEditable(false);
+    }
+
 	private void loadTasksForDashboard(User user) {
 	    Session session = HibernateUtil.getSessionFactory().openSession();
 
-	    // Truy vấn tất cả Task của user (hoàn thành hoặc chưa hoàn thành)
 	    List<Task> tasks = session.createQuery(
 	        "FROM Task WHERE user_id = :userId ORDER BY deadline ASC", Task.class)
 	        .setParameter("userId", user.getId())

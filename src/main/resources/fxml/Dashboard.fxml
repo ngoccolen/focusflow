@@ -5,10 +5,9 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -19,7 +18,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.control.ScrollPane?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="757.0" prefWidth="1125.0" style="-fx-background-color: #ededed;" xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
    <children>
@@ -53,6 +51,11 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+            </ImageView>
+            <ImageView fx:id="communityIcon" fitHeight="45.0" fitWidth="52.0" layoutX="21.0" layoutY="258.0" onMouseClicked="#handleCommunityClick" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/community.png" />
+               </image>
             </ImageView>
          </children>
       </AnchorPane>
@@ -310,5 +313,6 @@
             <VBox fx:id="taskContainer" style="-fx-background-color: #ffffff;" />
          </content>
       </ScrollPane>
+      <Button fx:id="saveButton" layoutX="729.0" layoutY="429.0" mnemonicParsing="false" text="Save" onMouseClicked="#saveNote" />
    </children>
 </AnchorPane>
