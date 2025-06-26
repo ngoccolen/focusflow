@@ -31,12 +31,7 @@ CREATE TABLE videos (
 );
 
 ALTER TABLE songs ADD CONSTRAINT unique_song_path_per_user UNIQUE (file_path, id);
-CREATE TABLE quotes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    content TEXT NOT NULL,
-    author VARCHAR(100) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
+
 CREATE TABLE task (
     task_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
@@ -59,4 +54,4 @@ CREATE TABLE note (
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (task_id) REFERENCES task(task_id) ON DELETE SET NULL
 );
-ALTER TABLE task ADD COLUMN remind_at DATETIME NULL;
+
