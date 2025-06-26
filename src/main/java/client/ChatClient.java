@@ -151,5 +151,10 @@ public class ChatClient {
         out.writeObject(msg);
         out.flush();
     }
+    public void sendMessage(Message msg) throws IOException {
+        out.writeObject(msg);
+        out.flush();
+    }
+
 
 }

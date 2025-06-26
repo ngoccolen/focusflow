@@ -25,10 +25,16 @@ public class FileBubbleLeftController {
     public void setData(ChatMessage message, User sender) {
         this.filePath = message.getFilePath();
         File file = new File(filePath);
-
-        fileName.setText(file.getName());
-        fileSize.setText(readableFileSize(file.length()));
-
+        
+        // Kiểm tra file tồn tại trước khi hiển thị
+        if (file.exists()) {
+            fileName.setText(file.getName());
+            fileSize.setText(readableFileSize(file.length()));
+        } else {
+            fileName.setText(file.getName());
+            fileSize.setText("File not available");
+        }
+        
         // Avatar (nếu có)
         if (sender.getAvatar() != null && !sender.getAvatar().isEmpty()) {
             File avatarFile = new File(sender.getAvatar());
@@ -36,7 +42,7 @@ public class FileBubbleLeftController {
                 avatarImage.setImage(new javafx.scene.image.Image(avatarFile.toURI().toString()));
             }
         }
-
+        
         downloadIcon.setOnMouseClicked(this::handleDownloadClick);
     }
 

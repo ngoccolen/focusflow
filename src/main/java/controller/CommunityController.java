@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 
 import com.vdurmont.emoji.Emoji;
 import com.vdurmont.emoji.EmojiManager;
@@ -38,6 +39,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -55,6 +57,7 @@ import javax.imageio.ImageIO;
 import model.ChatConversation;
 import model.ChatMember;
 import model.ChatMessage;
+import model.Message;
 import model.User;
 import client.ChatClient;
 // Controller con của mỗi item tin nhắn
@@ -115,27 +118,58 @@ public class CommunityController {
 	}
     @FXML
     public void initialize() {
-    	emojiGrid = new GridPane();
-    	emojiGrid.setHgap(5);
-    	emojiGrid.setVgap(5);
-    	emojiGrid.setStyle("-fx-padding: 10;");
+    	 emojiGrid = new GridPane(); 
+    	    emojiGrid.setHgap(5);
+    	    emojiGrid.setVgap(5);
+    	    emojiGrid.setPadding(new Insets(10));
+    	    emojiGrid.setStyle("-fx-background-color: white; -fx-border-color: gray; -fx-border-radius: 5px;");
 
-    	emojiPopup = new Popup();
-    	emojiPopup.setAutoHide(true);
-    	emojiPopup.getContent().add(emojiGrid);
-    	emojiButton.setOnAction(e -> {
-    	    if (!emojiPopup.isShowing()) {
-    	        emojiPopup.show(
-    	            emojiButton,
-    	            emojiButton.localToScreen(0, 0).getX(),
-    	            emojiButton.localToScreen(0, 0).getY() - emojiPopup.getHeight() - 10
-    	        );
-    	    } else {
-    	        emojiPopup.hide();
+    	    try {
+    	        String[] emojiFileNames = {
+    	            "1f600.png", "1f602.png", "1f603.png", "1f604.png", "1f60d.png",
+    	            "1f618.png", "1f622.png", "1f62d.png", "1f609.png", "2764-fe0f.png"
+    	        };
+
+    	        int col = 0, row = 0;
+    	        for (String fileName : emojiFileNames) {
+    	            InputStream is = getClass().getResourceAsStream("/emojis/" + fileName);
+    	            if (is == null) {
+    	                System.err.println("❌ Không tìm thấy emoji: " + fileName);
+    	                continue;
+    	            }
+
+    	            Image img = new Image(is, 32, 32, true, true);
+    	            ImageView view = new ImageView(img);
+
+    	            String finalName = fileName; // phải final để dùng trong lambda
+    	            view.setOnMouseClicked(e -> {
+    	                sendEmojiAsMessage(finalName);
+    	                emojiPopup.hide();
+    	            });
+
+    	            emojiGrid.add(view, col++, row);
+    	            if (col >= 10) {
+    	                col = 0;
+    	                row++;
+    	            }
+    	        }
+
+    	        // Gán emojiGrid vào popup
+    	        emojiPopup = new Popup();
+    	        emojiPopup.setAutoHide(true);
+    	        emojiPopup.getContent().add(emojiGrid);
+
+    	        emojiButton.setOnAction(e -> {
+    	            emojiPopup.show(emojiButton,
+    	                emojiButton.localToScreen(0, 0).getX(),
+    	                emojiButton.localToScreen(0, 0).getY() + emojiButton.getHeight()
+    	            );
+    	        });
+
+    	    } catch (Exception e) {
+    	        e.printStackTrace();
+    	        System.err.println("❌ Lỗi khi load emoji: " + e.getMessage());
     	    }
-    	});
-
-    	initEmojiPopup();
 
         // ⚠️ Dọn thư mục tạm chứa ảnh
         File imageTempDir = new File("temp_images");
@@ -177,13 +211,31 @@ public class CommunityController {
                             chatMsg.setSentAt(msg.getSentAt());
 
                             // Gán người gửi tạm
-                            User sender = new User();
-                            sender.setUsername(msg.getSenderName());
-                            sender.setAvatar(msg.getSenderAvatar());
+                            Session session = HibernateUtil.getSessionFactory().openSession();
+                            session.beginTransaction();
+
+                            // ✅ Load người gửi từ DB
+                            Query<User> query = session.createQuery("FROM User WHERE username = :uname", User.class);
+                            query.setParameter("uname", msg.getSenderName());
+                            User sender = query.uniqueResult();
+
+                            if (sender == null) {
+                                System.err.println("❌ Không tìm thấy người gửi trong DB: " + msg.getSenderName());
+                                session.getTransaction().rollback();
+                                session.close();
+                                return;
+                            }
+
+                            // ✅ Gán vào chatMsg
                             chatMsg.setSender(sender);
+
                             chatMsg.setChat(selectedChat);
                             chatMsg.setType(msg.getType());
                             chatMsg.setFilePath(msg.getFilePath());
+                            session.save(chatMsg);
+                            session.getTransaction().commit();
+                            session.close();
+
 
                             FXMLLoader loader;
                             AnchorPane bubble;
@@ -203,18 +255,19 @@ public class CommunityController {
                                         ImageBubbleRightController rightImageCtrl = loader.getController();
                                         rightImageCtrl.setData(chatMsg);
                                         break;
+                                     // Trong phần xử lý tin nhắn file
                                     case "file":
-                                        loader = new FXMLLoader(getClass().getResource("/fxml/fileBubble_right.fxml"));
+                                        loader = new FXMLLoader(getClass().getResource("/fxml/fileBubble_left.fxml"));
                                         bubble = loader.load();
-                                        FileBubbleRightController rightFileCtrl = loader.getController();
-                                        rightFileCtrl.setData(chatMsg);
+                                        FileBubbleLeftController leftFileCtrl = loader.getController();
+                                        // Đảm bảo truyền đủ thông tin file
+                                        leftFileCtrl.setData(chatMsg, sender);
                                         break;
                                     default:
                                         System.out.println("Unsupported message type: " + msg.getType());
                                         return;
                                 }
                             } else {
-                                // 👉 Tin nhắn của người khác, dùng bubble bên trái
                                 switch (msg.getType()) {
                                     case "text":
                                         loader = new FXMLLoader(getClass().getResource("/fxml/textBubble_left.fxml"));
@@ -265,30 +318,38 @@ public class CommunityController {
             }
         });
     }
-    private void initEmojiPopup() {
-        Collection<Emoji> emojis = EmojiManager.getAll();
+    private void sendEmojiAsMessage(String emojiFileName) {
+        if (selectedChat == null || loggedInUser == null) {
+            showAlert("Lỗi", "Vui lòng chọn cuộc trò chuyện trước khi gửi emoji.");
+            return;
+        }
 
-        int col = 0;
-        int row = 0;
-        for (Emoji emoji : emojis) {
-            Button btn = new Button(emoji.getUnicode());
-            btn.setStyle("-fx-font-size: 20; -fx-background-color: transparent;");
-            
-            btn.setOnAction(e -> {
-                MessContent.appendText(emoji.getUnicode()); // ✅ dùng appendText để không ghi đè
-                emojiPopup.hide(); // ẩn popup sau khi chọn
-            });
-
-            emojiGrid.add(btn, col, row);
-            col++;
-            if (col > 7) {
-                col = 0;
-                row++;
+        try {
+            File emojiFile = new File("src/main/resources/emojis/" + emojiFileName);
+            if (!emojiFile.exists()) {
+                System.out.println("❌ Emoji file not found: " + emojiFile.getAbsolutePath());
+                return;
             }
 
-            if (row > 5) break; // chỉ hiển thị khoảng 48 emoji
+            Message msg = new Message();
+            msg.setSenderName(loggedInUser.getUsername());
+            msg.setSenderAvatar(loggedInUser.getAvatar());
+            msg.setType("image"); // hoặc "emoji"
+            msg.setSentAt(LocalDateTime.now());
+            msg.setContent(emojiFileName);
+            msg.setFilePath(emojiFile.getAbsolutePath());
+            msg.setFileData(Files.readAllBytes(emojiFile.toPath()));
+            msg.setFileSize(emojiFile.length());
+            msg.setChatId(selectedChat.getChatId()); // ✅ dùng selectedChat
+            
+            chatClient.sendMessage(msg);
+        } catch (IOException e) {
+            showAlert("Lỗi", "Không thể gửi emoji: " + e.getMessage());
+            e.printStackTrace();
         }
     }
+
+
     public void updateAvatarImage(String path) {
         if (path != null) {
             File avatarFile = new File(path);

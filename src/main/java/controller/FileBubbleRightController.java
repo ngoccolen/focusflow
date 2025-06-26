@@ -25,6 +25,8 @@ public class FileBubbleRightController {
 
         fileName.setText(file.getName());
         fileSize.setText(readableFileSize(file.length()));
+        System.out.println("📂 File path (receiver): " + filePath);
+
 
         downloadIcon.setOnMouseClicked(this::handleDownloadClick);
     }

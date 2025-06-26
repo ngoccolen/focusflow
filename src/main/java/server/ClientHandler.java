@@ -41,34 +41,11 @@ public class ClientHandler extends Thread {
                     continue; // bỏ qua gửi broadcast cho loại join
                 }
 
-                // ✅ Nếu là ảnh/file thì xử lý như cũ (nếu cần)
+             // Thay đoạn xử lý file/image bằng:
                 if ("image".equals(message.getType()) || "file".equals(message.getType())) {
-                    File tempDir = new File("temp_images");
-                    if (!tempDir.exists()) {
-                        tempDir.mkdir();
-                    }
-
-                    String savePath = "temp_images/" + message.getContent();
-                    File savedFile = new File(savePath);
-                    FileOutputStream fileOut = new FileOutputStream(savedFile);
-                    byte[] buffer = new byte[4096];
-                    int bytesRead;
-                    long remaining = message.getFileSize();
-
-                    InputStream rawIn = socket.getInputStream();
-                    while ((bytesRead = rawIn.read(buffer, 0, (int)Math.min(buffer.length, remaining))) > 0) {
-                        fileOut.write(buffer, 0, bytesRead);
-                        remaining -= bytesRead;
-                        if (remaining <= 0) break;
-                    }
-
-                    fileOut.close();
-                    message.setFilePath(savePath);
-
-                    // ✅ Gửi lại file tới các client khác trong nhóm
-                    ChatServer.broadcastFileToClients(message, savedFile);
-
-                    continue; // Không broadcast lại nữa vì đã broadcast nội dung file rồi
+                    // Chuyển tiếp message cho broadcastToChat xử lý
+                    ChatServer.broadcastToChat(message);
+                    continue;
                 }
                 if ("create_group".equals(message.getType())) {
                     String groupName = message.getContent();
